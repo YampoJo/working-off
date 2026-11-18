@@ -114,19 +114,19 @@
                 <div class="inline-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
                     <div class="form-group">
                         <label>Дата</label>
-                        <input type="date" id="new-slot-date" required>
+                        <input type="date" id="new-slot-date">
                     </div>
                     <div class="form-group" style="max-width: 120px;">
                         <label>Время</label>
-                        <input type="time" id="new-slot-time" required>
+                        <input type="time" id="new-slot-time">
                     </div>
                     <div class="form-group">
                         <label>Доп. текст (необязательно)</label>
                         <input type="text" id="new-slot-display" placeholder="Оставьте пустым для 'Отработка'">
-                    </div9>
+                    </div>
                     <div class="form-group" style="max-width: 80px;">
                         <label>Мест</label>
-                        <input type="number" id="new-slot-max" value="7" min="1" required>
+                        <input type="number" id="new-slot-max" value="7" min="1">
                     </div>
                     <button class="btn btn-primary" onclick="addSlot()" style="height: 42px;">Добавить</button>
                 </div>
@@ -315,10 +315,11 @@
             data.forEach(s => {
                 const isFull = s.booked >= s.max;
                 const displayText = (s.display && s.display !== "Отработка") ? s.display : '<span style="color:var(--text-muted)">Отработка</span>';
+                const timeText = s.time ? s.time : '—';
                 
                 tbody.innerHTML += `<tr>
                     <td>${s.date}</td>
-                    <td>${s.time || '—'}</td>
+                    <td>${timeText}</td>
                     <td>${displayText}</td>
                     <td style="color: ${isFull ? 'var(--error)' : 'var(--success)'}; font-weight: 600;">
                         ${s.booked} / ${s.max}
@@ -332,10 +333,21 @@
     }
 
     async function addSlot() {
-        const date = document.getElementById('new-slot-date').value;
-        const time = document.getElementById('new-slot-time').value;
-        const display = document.getElementById('new-slot-display').value.trim();
-        const max = parseInt(document.getElementById('new-slot-max').value);
+        const dateEl = document.getElementById('new-slot-date');
+        const timeEl = document.getElementById('new-slot-time');
+        const displayEl = document.getElementById('new-slot-display');
+        const maxEl = document.getElementById('new-slot-max');
+
+        // Защита от того, что элементы не найдены
+        if (!dateEl || !timeEl || !maxEl) {
+            console.error('Не найдены элементы формы расписания');
+            return showToast('Ошибка интерфейса. Обновите страницу.', 'error');
+        }
+
+        const date = dateEl.value;
+        const time = timeEl.value;
+        const display = displayEl ? displayEl.value.trim() : '';
+        const max = parseInt(maxEl.value);
         
         if (!date || !time || !max) return showToast('Заполните дату, время и места', 'error');
         
@@ -347,19 +359,22 @@
             await apiCall('POST', 'addSlot', { body: { date, time, display, max } });
             showToast('Слот добавлен', 'success');
             // Очистка полей
-            document.getElementById('new-slot-date').value = '';
-            document.getElementById('new-slot-time').value = '';
-            document.getElementById('new-slot-display').value = '';
+            dateEl.value = '';
+            timeEl.value = '';
+            if (displayEl) displayEl.value = '';
             loadSchedule();
         } catch (e) { 
-            // Если бэкенд отклонил из-за правила 10 часов, покажем его ошибку
+            // Если бэкенд отклонил из-за правила 10 часов или другой причины, покажем его ошибку
             showToast(e.message, 'error'); 
         }
     }
     async function deleteSlot(date, time) {
+        if (!time) {
+            showToast('Ошибка: время слота не указано', 'error');
+            return;
+        }
         if (!confirm(`Удалить слот на ${date} в ${time}?`)) return;
         try {
-            // Передаем оба параметра, чтобы бэкенд нашел точное совпадение
             await apiCall('DELETE', 'deleteSlot', { params: { date, time } });
             showToast('Слот удалён', 'success');
             loadSchedule();
