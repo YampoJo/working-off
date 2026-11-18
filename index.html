@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись на отработку занятий</title>
+    <style>
+        :root{
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --disabled: #cbd5e1;
+        }
+
+        *{ 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        }
+        
+        body{ 
+            background-color: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6; 
+            padding: 20px; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+        }
+        
+        .container{ 
+            max-width: 600px; 
+            width: 100%; 
+            margin-top: 40px; 
+        }
+        
+        h1{ 
+            font-size: 1.8rem; 
+            margin-bottom: 8px; 
+            text-align: center; 
+        }
+
+        .subtitle{ 
+            text-align: center; 
+            color: var(--text-muted); 
+            margin-bottom: 32px; 
+            font-size: 0.95rem; 
+        }
+
+        .card{ 
+            background: var(--card-bg); 
+            border-radius: 12px; 
+            padding: 24px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            margin-bottom: 20px; 
+            border: 1px solid var(--border); 
+        }
+
+        .dates-grid{ 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+        
+        .date-btn{ 
+            background: var(--card-bg); 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            
+            padding: 16px 12px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            text-align: center;
+        }
+
+        .date-btn:hover:not(:disabled){ 
+            border-color: var(--primary); 
+            transform: translateY(-2px); 
+        }
+
+        .date-btn.active{ 
+            border-color: var(--primary); 
+            background: #eef2ff; 
+        }
+
+        .date-btn:disabled{ 
+            opacity: 0.6; 
+            cursor: not-allowed; 
+            background: #f1f5f9;
+        }
+        
+        .date-title{ 
+            font-weight: 600; 
+            font-size: 0.95rem; 
+            margin-bottom: 4px; 
+        }
+
+        .date-status{ 
+            font-size: 0.8rem; 
+        }
+
+        .status-free{ 
+            color: var(--success); 
+            font-weight: 500;
+        }
+
+        .status-full{ 
+            color: var(--text-muted);
+        }
+
+        .form-group{ 
+            margin-bottom: 16px; 
+        }
+
+        label{ 
+            display: block; 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            margin-bottom: 6px; 
+            color: var(--text); 
+        }
+
+        input[type="text"], input[type="tel"] {
+            width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 1rem; transition: border-color 0.2s; outline: none;
+        }
+
+        input:focus{ 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
+        }
+
+        .pdn-checkbox{ 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 10px; 
+            margin: 20px 0; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+        }
+
+        .pdn-checkbox input{ 
+            margin-top: 3px; 
+            accent-color: var(--primary); 
+            width: 18px; 
+            height: 18px; 
+            flex-shrink: 0; 
+        }
+
+        .pdn-checkbox a{ 
+            color: var(--primary); 
+            text-decoration: none; 
+        }
+
+        .pdn-checkbox a:hover{ 
+            text-decoration: underline; 
+        }
+
+        .submit-btn {
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary); 
+            color: white; 
+            border: none;
+            border-radius: 10px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover:not(:disabled){ background: var(--primary-hover);}
+        .submit-btn:disabled{ background: var(--disabled); cursor: not-allowed;}
+        .hidden{display: none !important;}
+
+        .message{ 
+            padding: 16px; 
+            border-radius: 10px; 
+            text-align: center; 
+            font-weight: 500; 
+            margin-top: 16px;
+        }
+
+        .message.success{ 
+            background: #ecfdf5; 
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message.error{
+            background: #fef2f2; 
+            color: #991b1b; 
+            border: 1px solid #fecaca; 
+        }
+        
+        .loading{ 
+            text-align: center; 
+            padding: 40px; 
+            color: var(--text-muted);
+        }
+
+        .selected-date-display{ 
+            font-weight: 600; 
+            color: var(--primary); 
+            margin-bottom: 20px; 
+            font-size: 1.1rem; 
+            text-align: center; 
+        }
+        
+        .back-link{ 
+            display: inline-block; 
+            margin-top: 16px; 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+            text-decoration: none; 
+        }
+
+        .back-link:hover{color: var(--primary);}
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Запись на отработку</h1>
+        <p class="subtitle">Выберите свободную дату и заполните форму</p>
+
+        <div id="step-dates" class="card">
+            <div id="loading" class="loading">Загрузка расписания...</div>
+            <div id="dates-grid" class="dates-grid hidden"></div>
+            <div id="load-error" class="message error hidden"></div>
+        </div>
+
+        <div id="step-form" class="card hidden">
+            <div class="selected-date-display" id="selected-date-text"></div>
+            
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="child-name">ФИО ребёнка *</label>
+                    <input type="text" id="child-name" required placeholder="Иванов Иван Иванович">
+                </div>
+                
+                <div class="form-group">
+                    <label for="parent-name">ФИО родителя *</label>
+                    <input type="text" id="parent-name" required placeholder="Иванова Мария Петровна">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Номер телефона *</label>
+                    <input type="tel" id="phone" required placeholder="+7 (999) 123-45-67">
+                </div>
+
+                <div class="pdn-checkbox">
+                    <input type="checkbox" id="pdn-agree" required>
+                    <label for="pdn-agree">
+                        Я даю согласие на обработку персональных данных в соответствии с 
+                        <a href="/policy.html" target="_blank">Политикой обработки ПДн</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn" disabled>Записаться</button>
+            </form>
+            
+            <a class="back-link" id="back-to-dates">← Вернуться к выбору даты</a>
+            <div id="form-message" class="message hidden"></div>
+        </div>
+
+        <div id="step-success" class="card hidden">
+            <div class="message success">Вы успешно записаны!</div>
+            <p style="text-align:center; margin-top:12px; color:var(--text-muted);">
+                Мы свяжемся с вами для подтверждения.<br>
+                <a class="back-link" id="new-booking">Записать ещё одного ребёнка →</a>
+            </p>
+        </div>
+    </div>
+
+<script>
+    const API_URL = 'https://functions.yandexcloud.net/d4e1m42j6h2ei9q4c1gj';
+
+    let selectedSlot = null;
+
+    const els = {
+        stepDates: document.getElementById('step-dates'),
+        stepForm: document.getElementById('step-form'),
+        stepSuccess: document.getElementById('step-success'),
+        loading: document.getElementById('loading'),
+        datesGrid: document.getElementById('dates-grid'),
+        loadError: document.getElementById('load-error'),
+        selectedDateText: document.getElementById('selected-date-text'),
+        form: document.getElementById('booking-form'),
+        submitBtn: document.getElementById('submit-btn'),
+        pdnAgree: document.getElementById('pdn-agree'),
+        formMessage: document.getElementById('form-message'),
+        backToDates: document.getElementById('back-to-dates'),
+        newBooking: document.getElementById('new-booking')
+    };
+
+    document.addEventListener('DOMContentLoaded', loadSchedule);
+
+    els.pdnAgree.addEventListener('change', () => {
+        els.submitBtn.disabled = !els.pdnAgree.checked;
+    });
+
+    els.backToDates.addEventListener('click', () => showStep('dates'));
+    els.newBooking.addEventListener('click', () => {
+        els.form.reset();
+        els.submitBtn.disabled = true;
+        selectedSlot = null;
+        loadSchedule();
+        showStep('dates');
+    });
+
+    els.form.addEventListener('submit', handleSubmit);
+
+    async function loadSchedule() {
+        showStep('dates');
+        els.loading.classList.remove('hidden');
+        els.datesGrid.classList.add('hidden');
+        els.loadError.classList.add('hidden');
+
+        try {
+            const res = await fetch(API_URL);
+            if (!res.ok) throw new Error(`Ошибка сервера: ${res.status}`);
+            const slots = await res.json();
+            renderSlots(slots);
+        } catch (err) {
+            els.loading.classList.add('hidden');
+            els.loadError.textContent = `Не удалось загрузить расписание: ${err.message}`;
+            els.loadError.classList.remove('hidden');
+        }
+    }
+
+    function renderSlots(slots) {
+        els.loading.classList.add('hidden');
+        els.datesGrid.innerHTML = '';
+
+        if (!slots || slots.length === 0) {
+            els.datesGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">Нет доступных дат</p>';
+            els.datesGrid.classList.remove('hidden');
+            return;
+        }
+
+        slots.forEach(slot => {
+            const free = slot.max - slot.booked;
+            const isFull = free <= 0;
+            
+            const btn = document.createElement('button');
+            btn.className = 'date-btn';
+            btn.disabled = isFull;
+            btn.innerHTML = `
+                <div class="date-title">${slot.display}</div>
+                <div class="date-status ${isFull ? 'status-full' : 'status-free'}">
+                    ${isFull ? 'Мест нет' : `Свободно: ${free} из ${slot.max}`}
+                </div>
+            `;
+            
+            if (!isFull) {
+                btn.addEventListener('click', () => selectSlot(slot, btn));
+            }
+            
+            els.datesGrid.appendChild(btn);
+        });
+
+        els.datesGrid.classList.remove('hidden');
+    }
+
+    function selectSlot(slot, btnElement) {
+        document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+        
+        selectedSlot = slot;
+        els.selectedDateText.textContent = slot.display;
+
+        els.form.reset();
+        els.submitBtn.disabled = true;
+        hideMessage();
+        
+        showStep('form');
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        if (!selectedSlot) return;
+
+        els.submitBtn.disabled = true;
+        els.submitBtn.textContent = 'Отправка...';
+        hideMessage();
+
+        const payload = {
+            date: selectedSlot.date,
+            childName: document.getElementById('child-name').value.trim(),
+            parentName: document.getElementById('parent-name').value.trim(),
+            phone: document.getElementById('phone').value.trim()
+        };
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                if (res.status === 409) {
+                    showMessage('К сожалению, это место только что заняли. Пожалуйста, вернитесь и выберите другую дату.', 'error');
+                    els.submitBtn.disabled = false;
+                    els.submitBtn.textContent = 'Записаться';
+                    return;
+                }
+                throw new Error(data.error || 'Ошибка при записи');
+            }
+
+            showStep('success');
+
+        } catch (err) {
+            showMessage(err.message, 'error');
+            els.submitBtn.disabled = false;
+            els.submitBtn.textContent = 'Записаться';
+        }
+    }
+
+    function showStep(stepName) {
+        els.stepDates.classList.toggle('hidden', stepName !== 'dates');
+        els.stepForm.classList.toggle('hidden', stepName !== 'form');
+        els.stepSuccess.classList.toggle('hidden', stepName !== 'success');
+    }
+
+    function showMessage(text, type) {
+        els.formMessage.textContent = text;
+        els.formMessage.className = `message ${type}`;
+        els.formMessage.classList.remove('hidden');
+    }
+
+    function hideMessage() {
+        els.formMessage.classList.add('hidden');
+    }
+</script>
+</body>
+</html>
