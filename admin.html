@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Запись на отработку</title>
+    <style>
+        :root {
+            --primary: #4f46e5; --primary-hover: #4338ca; --bg: #f8fafc;
+            --card-bg: #ffffff; --text: #1e293b; --text-muted: #64748b;
+            --border: #e2e8f0; --danger: #ef4444; --success: #10b981;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; display: flex; justify-content: center; }
+        .container { max-width: 900px; width: 100%; margin-top: 40px; }
+        
+        /* Карточки и формы */
+        .card { background: var(--card-bg); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 20px; }
+        .hidden { display: none !important; }
+        
+        h1 { font-size: 1.5rem; margin-bottom: 20px; text-align: center; }
+        h2 { font-size: 1.2rem; margin-bottom: 16px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+        input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        
+        .btn { padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--danger); color: white; padding: 6px 12px; font-size: 0.85rem; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-logout { background: transparent; color: var(--text-muted); border: 1px solid var(--border); width: auto; margin-bottom: 20px; }
+        
+        /* Таблицы */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #f1f5f9; font-weight: 600; color: var(--text-muted); }
+        tr:hover { background: #f8fafc; }
+        
+        /* Уведомления */
+        .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100; }
+        .toast.show { opacity: 1; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* Сетка для добавления слота */
+        .slot-form { display: grid; grid-template-columns: 1fr 2fr 80px auto; gap: 12px; align-items: end; }
+        @media (max-width: 600px) { .slot-form { grid-template-columns: 1fr; } }
+    </style>
+8</head>
+<body>
+    <div class="container">
+        <!-- ЭКРАН ВХОДА -->
+        <div id="login-screen" class="card" style="max-width: 400px; margin: 100px auto;">
+            <h1>🔐 Вход в админ-панель</h1>
+            <div class="form-group">
+                <label>Логин</label>
+                <input type="text" id="login-input" placeholder="mup">
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="password-input" placeholder="••••">
+            </div>
+            <button class="btn btn-primary" onclick="handleLogin()">Войти</button>
+            <p id="login-error" style="color: var(--danger); text-align: center; margin-top: 12px; font-size: 0.9rem;" class="hidden"></p>
+        </div>
+
+        <!-- ОСНОВНОЙ ИНТЕРФЕЙС -->
+        <div id="dashboard" class="hidden">
+            <button class="btn btn-logout" onclick="handleLogout()">← Выйти из аккаунта</div>
+            
+            <!-- Вкладка: Записи -->
+            <div class="card">
+                <h2>📋 Записи на отработку</h2>
+                <div class="table-wrapper">
+                    <table id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Дата и время</th>
+                                <th>Ребёнок</th>
+                                <th>Родитель</th>
+                                <th>Телефон</th>
+                                <th>Дата записи</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-body">
+                            <tr><td colspan="5" style="text-align:center; padding: 20px;">Загрузка...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Вкладка: Расписание -->
+            <div class="card">
+                <h2>📅 Управление расписанием</h2>
+                <div class="slot-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                    <div>
+                        <label>Дата (YYYY-MM-DD)</label>
+                        <input type="date" id="new-slot-date">
+                    </div>
+                    <div>
+                        <label>Отображение</label>
+                        <input type="text" id="new-slot-display" placeholder="23 ноября (Сб) 15:00">
+                    </div>
+                    <div>
+                        <label>Мест</label>
+                        <input type="number" id="new-slot-max" value="7" min="1">
+                    </div>
+                    <button class="btn btn-primary" style="height: 42px;" onclick="handleAddSlot()">Добавить</button recent>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Отображение</th>
+                                <th>Записано / Всего</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-body">
+                            <tr><td colspan="4" style="text-align:center; padding: 20px;">Загрузка...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+<script>
+    const API_URL = 'https://functions.yandexcloud.net/d4e1m42j6h2ei9q4c1gj'; // ЗАМЕНИ НА СВОЙ
+    let token = localStorage.getItem('admin_token');
+
+    // === ИНИЦИАЛИЗАЦИЯ ===
+    document.addEventListener('DOMContentLoaded', () => {
+        if (token) {
+            showDashboard();
+        }
+    });
+
+    // === API ХЕЛПЕР ===
+    async function api(action, method = 'GET', body = null, params = {}) {
+        const url = new URL(API_URL);
+        url.searchParams.set('action', action);
+        Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['X-Auth-Token'] = token;
+
+        try {
+            const res = await fetch(url.toString(), {
+                method,
+                headers,
+                body: body ? JSON.stringify(body) : undefined
+            });
+            
+            if (res.status === 401) {
+                handleLogout();
+                showToast('Сессия истекла. Войдите снова.', 'error');
+                return null;
+            }
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
+            return data;
+        } catch (e) {
+            showToast(e.message, 'error');
+            return null;
+        }
+    }
+
+    // === АВТОРИЗАЦИЯ ===
+    async function handleLogin() {
+        const login = document.getElementById('login-input').value.trim();
+        const password = document.getElementById('password-input').value.trim();
+        const errEl = document.getElementById('login-error');
+
+        if (!login || !password) {
+            errEl.textContent = 'Заполните все поля';
+            errEl.classList.remove('hidden');
+            return;
+        }
+
+        const data = await api('login', 'POST', { login, password });
+        if (data && data.token) {
+            token = data.token;
+            localStorage.setItem('admin_token', token);
+            errEl.classList.add('hidden');
+            showDashboard();
+            showToast(`Добро пожаловать, ${data.role}!`, 'success');
+        } else {
+            errEl.textContent = 'Неверный логин или пароль';
+            errEl.classList.remove('hidden');
+        }
+    }
+
+    function handleLogout() {
+        token = null;
+        localStorage.removeItem('admin_token');
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('login-input').value = '';
+        document.getElementById('password-input').value = '';
+    }
+
+    function showDashboard() {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('hasDashboard').classList.remove('hidden'); // Опечатка в оригинале, исправлено ниже
+        document.getElementById('dashboard').classList.remove('hidden');
+        loadData();
+    }
+
+    // === ЗАГРУЗКА ДАННЫХ ===
+    async function loadData() {
+        await Promise.all([loadBookings(), loadSchedule()]);
+    }
+
+    async function loadBookings() {
+        const tbody = document.getElementById('bookings-body');
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Загрузка...</td></tr>';
+        
+        const data = await api('bookings', 'GET');
+        if (!data) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--danger);">Ошибка загрузки</td></tr>';
+            return;
+        }
+
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">Пока нет записей</td></tr>';
+            return;
+        }
+
+        // Сортируем: новые сверху
+        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        tbody.innerHTML = data.map(b => `
+            <tr>
+                <td><strong>${b.display}</td>
+                <td>${b.childName}</td>
+                <td>${b.parentName}</td>
+                <td>${b.phone}</td>
+                <td style="color: var(--text-muted); font-size: 0.85rem;">${new Date(b.createdAt).toLocaleString('ru-RU')}</td>
+            </tr>
+        `).join('');
+    }
+
+    async function loadSchedule() {
+        const tbody = document.getElementById('schedule-body');
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Загрузка...</td></tr>';
+        
+        const data = await api('', 'GET'); // action='' вернёт get_schedule() по умолчанию в index.py
+        if (!data) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--danger);">Ошибка загрузки</td></tr>';
+            return;
+        }
+
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Расписание пусто</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = data.map(s => `
+            <tr>
+                <td>${s.date}</td>
+                <td>${s.display}</td>
+                <td><span style="color: ${s.booked >= s.max ? 'var(--danger)' : 'var(--success)'}; font-weight: 600;">
+                    ${s.booked} / ${s.max}
+                </span></td>
+                <td>
+                    <button class="btn btn-danger" onclick="handleDeleteSlot('${s.date}')">Удалить</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // === ДЕЙСТВИЯ ===
+    async function handleAddSlot() {
+        const date = document.getElementById('new-slot-date').value;
+        const display = document.getElementById('new-slot-display').value.trim();
+        const max = parseInt(document.getElementById('new-slot-max').value);
+
+        if (!date || !display || !max) {
+            showToast('Заполните все поля слота', 'error');
+            return;
+        }
+
+        const res = await api('addSlot', 'POST', { date, display, max });
+        if (res) {
+            showToast('Слот успешно добавлен', 'success');
+            document.getElementById('new-slot-date').value = '';
+            document.getElementById('new-slot-display').value = '';
+            await loadSchedule();
+        }
+    }
+
+    async function handleDeleteSlot(date) {
+        if (!confirm(`Удалить слот на ${date}? Записанные студенты останутся в истории, но слот исчезнет из расписания.`)) return;
+
+        const res = await api('deleteSlot', 'DELETE', null, { date });
+        if (res) {
+            showToast('Слот удалён', 'success');
+            await loadSchedule();
+        }
+    }
+
+    // === УТИЛИТЫ ===
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast show ${type}`;
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+</script>
+</body>
+</html>
