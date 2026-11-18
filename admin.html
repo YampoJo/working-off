@@ -287,21 +287,34 @@
             const tbody = document.getElementById('bookings-tbody');
             tbody.innerHTML = '';
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">Записей пока нет</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">Записей пока нет</td></tr>';
                 return;
             }
-            // Сортируем: новые сверху
             data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(b => {
-                const date = new Date(b.createdAt).toLocaleString('ru-RU');
+                const dateStr = b.date ? `${b.date} в ${b.time || '—'}` : b.display;
+                const createdAt = new Date(b.createdAt).toLocaleString('ru-RU');
                 tbody.innerHTML += `<tr>
-                    <td>${b.display}</td>
+                    <td style="font-weight:600;">${dateStr}</td>
                     <td>${b.childName}</td>
                     <td>${b.parentName}</td>
                     <td>${b.phone}</td>
-                    <td style="color: var(--text-muted); font-size: 0.85rem;">${date}</td>
+                    <td style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.date}', '${b.time}', '${b.phone}')">Отменить</button>
+                    </td>
                 </tr>`;
             });
         } catch (e) { if(e.message !== 'Unauthorized') showToast(e.message, 'error'); }
+    }
+
+    async function deleteBooking(date, time, phone) {
+        if (!confirm('Вы уверены, что хотите отменить эту запись ребёнка?')) return;
+        try {
+            await apiCall('DELETE', 'deleteBooking', { params: { date, time, phone } });
+            showToast('Запись отменена', 'success');
+            loadBookings(); // Перезагружаем список
+            // Опционально: можно перезагрузить и расписание, чтобы обновился счётчик
+        } catch (e) { showToast(e.message, 'error'); }
     }
 
     // === ДЕЙСТВИЯ: РАСПИСАНИЕ ===
@@ -325,7 +338,7 @@
                         ${s.booked} / ${s.max}
                     </td>
                     <td>
-                        ${s.booked === 0 ? `<button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}')">Удалить</button>` : '<span style="color:var(--text-muted); font-size:0.85rem;">Есть записи</span>'}
+                        <button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}', ${s.booked})">Удалить</button>
                     </td>
                 </tr>`;
             });
@@ -368,12 +381,14 @@
             showToast(e.message, 'error'); 
         }
     }
-    async function deleteSlot(date, time) {
-        if (!time) {
-            showToast('Ошибка: время слота не указано', 'error');
-            return;
+    async function deleteSlot(date, time, bookedCount) {
+        let confirmMsg = `Удалить слот на ${date} в ${time}?`;
+        if (bookedCount > 0) {
+            confirmMsg = `⚠️ ВНИМАНИЕ!\n\nНа этот слот уже записано детей: ${bookedCount}.\n\nВы уверены? Не забыли уведомить родителей об отмене?`;
         }
-        if (!confirm(`Удалить слот на ${date} в ${time}?`)) return;
+        
+        if (!confirm(confirmMsg)) return;
+        
         try {
             await apiCall('DELETE', 'deleteSlot', { params: { date, time } });
             showToast('Слот удалён', 'success');

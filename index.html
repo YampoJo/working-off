@@ -304,6 +304,35 @@
         newBooking: document.getElementById('new-booking')
     };
 
+    // Автоматическое форматирование телефона: +7 (999) 888-77-66
+    function formatPhone(value) {
+        const numbers = value.replace(/\D/g, ''); // Только цифры
+        if (numbers.length === 0) return '';
+        
+        let res = '+7';
+        if (numbers.length > 1) res += ' (' + numbers.substring(1, 4);
+        if (numbers.length >= 5) res += ') ' + numbers.substring(4, 7);
+        if (numbers.length >= 8) res += '-' + numbers.substring(7, 9);
+        if (numbers.length >= 10) res += '-' + numbers.substring(9, 11);
+        return res;
+    }
+
+    // Авто-капитализация первой буквы каждого слова
+    function capitalizeWords(str) {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    // Навешиваем обработчики на поля ввода
+    document.getElementById('phone').addEventListener('input', function(e) {
+        e.target.value = formatPhone(e.target.value);
+    });
+
+    ['child-name', 'parent-name'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function(e) {
+            e.target.value = capitalizeWords(e.target.value);
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', loadSchedule);
 
     els.pdnAgree.addEventListener('change', () => {
@@ -409,15 +438,38 @@
         e.preventDefault();
         if (!selectedSlot) return;
 
+        const childName = document.getElementById('child-name').value.trim();
+        const parentName = document.getElementById('parent-name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+
+        // 1. Проверка ФИО на 3 слова
+        const childWords = childName.split(/\s+/).filter(w => w.length > 0);
+        const parentWords = parentName.split(/\s+/).filter(w => w.length > 0);
+        
+        if (childWords.length !== 3) {
+            showMessage('ФИО ребёнка должно состоять ровно из 3 слов (Фамилия Имя Отчество)', 'error');
+            return;
+        }
+        if (parentWords.length !== 3) {
+            showMessage('ФИО родителя должно состоять ровно из 3 слов', 'error');
+            return;
+        }
+
+        // 2. Проверка телефона (должен быть полностью заполнен: +7 (XXX) XXX-XX-XX = 18 символов)
+        if (phone.length < 18) {
+            showMessage('Введите номер телефона полностью в формате +7 (999) 888-77-66', 'error');
+            return;
+        }
+
         els.submitBtn.disabled = true;
         els.submitBtn.textContent = 'Отправка...';
         hideMessage();
 
         const payload = {
             date: selectedSlot.date,
-            childName: document.getElementById('child-name').value.trim(),
-            parentName: document.getElementById('parent-name').value.trim(),
-            phone: document.getElementById('phone').value.trim()
+            childName: childName,
+            parentName: parentName,
+            phone: phone
         };
 
         try {
@@ -431,7 +483,7 @@
 
             if (!res.ok) {
                 if (res.status === 409) {
-                    showMessage('К сожалению, это место только что заняли. Пожалуйста, вернитесь и выберите другую дату.', 'error');
+                    showMessage(data.error || 'К сожалению, это место только что заняли или вы уже записаны.', 'error');
                     els.submitBtn.disabled = false;
                     els.submitBtn.textContent = 'Записаться';
                     return;
