@@ -339,6 +339,13 @@
         }
     }
 
+    function getDayOfWeek(dateStr) {
+        const days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+        // Добавляем T00:00:00, чтобы браузер не сдвигал дату из-за часового пояса
+        const date = new Date(dateStr + 'T00:00:00');
+        return days[date.getDay()];
+    }
+
     function renderSlots(slots) {
         els.loading.classList.add('hidden');
         els.datesGrid.innerHTML = '';
@@ -349,15 +356,26 @@
             return;
         }
 
+        const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+
         slots.forEach(slot => {
             const free = slot.max - slot.booked;
             const isFull = free <= 0;
+            
+            // Формируем красивую дату: "15 ноября (СБ), 15:00"
+            const dateObj = new Date(slot.date + 'T00:00:00');
+            const dayName = getDayOfWeek(slot.date);
+            const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} (${dayName}), ${slot.time}`;
+            
+            // Логика отображения: если админ задал кастомный текст (и это не дефолтное "Отработка"), показываем его.
+            // Иначе показываем сгенерированную красивую строку.
+            const titleText = (slot.display && slot.display !== "Отработка") ? slot.display : `Отработка, ${formattedDate}`;
             
             const btn = document.createElement('button');
             btn.className = 'date-btn';
             btn.disabled = isFull;
             btn.innerHTML = `
-                <div class="date-title">${slot.display}</div>
+                <div class="date-title">${titleText}</div>
                 <div class="date-status ${isFull ? 'status-full' : 'status-free'}">
                     ${isFull ? 'Мест нет' : `Свободно: ${free} из ${slot.max}`}
                 </div>
@@ -378,12 +396,12 @@
         btnElement.classList.add('active');
         
         selectedSlot = slot;
-        els.selectedDateText.textContent = slot.display;
-
+        // Показываем пользователю тот же текст, что и на кнопке
+        els.selectedDateText.textContent = (slot.display && slot.display !== "Отработка") ? slot.display : `Отработка, ${new Date(slot.date + 'T00:00:00').getDate()} ${["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"][new Date(slot.date + 'T00:00:00').getMonth()]} (${getDayOfWeek(slot.date)}), ${slot.time}`;
+        
         els.form.reset();
         els.submitBtn.disabled = true;
         hideMessage();
-        
         showStep('form');
     }
 

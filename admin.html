@@ -113,13 +113,17 @@
                 <h3>Управление слотами</h3>
                 <div class="inline-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
                     <div class="form-group">
-                        <label>Дата (YYYY-MM-DD)</label>
+                        <label>Дата</label>
                         <input type="date" id="new-slot-date" required>
                     </div>
-                    <div class="form-group">
-                        <label>Отображение</label>
-                        <input type="text" id="new-slot-display" placeholder="23 ноября (Сб) 15:00" required>
+                    <div class="form-group" style="max-width: 120px;">
+                        <label>Время</label>
+                        <input type="time" id="new-slot-time" required>
                     </div>
+                    <div class="form-group">
+                        <label>Доп. текст (необязательно)</label>
+                        <input type="text" id="new-slot-display" placeholder="Оставьте пустым для 'Отработка'">
+                    </div9>
                     <div class="form-group" style="max-width: 80px;">
                         <label>Мест</label>
                         <input type="number" id="new-slot-max" value="7" min="1" required>
@@ -129,7 +133,7 @@
                 <div class="table-container">
                     <table id="schedule-table">
                         <thead>
-                            <tr><th>Дата</th><th>Отображение</th><th>Записано / Всего</th><th>Действия</th></tr>
+                            <tr><th>Дата</th><th>Время</th><th>Текст</th><th>Записано</th><th>Действия</th></tr>
                         </thead>
                         <tbody id="schedule-tbody"></tbody>
                     </table>
@@ -303,7 +307,6 @@
     // === ДЕЙСТВИЯ: РАСПИСАНИЕ ===
     async function loadSchedule() {
         try {
-            // Используем публичный эндпоинт без action для получения всего расписания
             const res = await fetch(API_URL); 
             const data = await res.json();
             const tbody = document.getElementById('schedule-tbody');
@@ -311,14 +314,17 @@
             
             data.forEach(s => {
                 const isFull = s.booked >= s.max;
+                const displayText = (s.display && s.display !== "Отработка") ? s.display : '<span style="color:var(--text-muted)">Отработка</span>';
+                
                 tbody.innerHTML += `<tr>
                     <td>${s.date}</td>
-                    <td>${s.display}</td>
+                    <td>${s.time || '—'}</td>
+                    <td>${displayText}</td>
                     <td style="color: ${isFull ? 'var(--error)' : 'var(--success)'}; font-weight: 600;">
                         ${s.booked} / ${s.max}
                     </td>
                     <td>
-                        ${s.booked === 0 ? `<button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}')">Удалить</button>` : '<span style="color:var(--text-muted); font-size:0.85rem;">Есть записи</span>'}
+                        ${s.booked === 0 ? `<button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}')">Удалить</button>` : '<span style="color:var(--text-muted); font-size:0.85rem;">Есть записи</span>'}
                     </td>
                 </tr>`;
             });
@@ -327,24 +333,34 @@
 
     async function addSlot() {
         const date = document.getElementById('new-slot-date').value;
-        const display = document.getElementById('new-slot-display').value;
+        const time = document.getElementById('new-slot-time').value;
+        const display = document.getElementById('new-slot-display').value.trim();
         const max = parseInt(document.getElementById('new-slot-max').value);
         
-        if (!date || !display || !max) return showToast('Заполните все поля', 'error');
+        if (!date || !time || !max) return showToast('Заполните дату, время и места', 'error');
         
+        // Базовая проверка на прошедшую дату на фронтенде
+        const today = new Date().toISOString().split('T')[0];
+        if (date < today) return showToast('Дата не может быть в прошлом', 'error');
+
         try {
-            await apiCall('POST', 'addSlot', { body: { date, display, max } });
+            await apiCall('POST', 'addSlot', { body: { date, time, display, max } });
             showToast('Слот добавлен', 'success');
+            // Очистка полей
             document.getElementById('new-slot-date').value = '';
+            document.getElementById('new-slot-time').value = '';
             document.getElementById('new-slot-display').value = '';
             loadSchedule();
-        } catch (e) { showToast(e.message, 'error'); }
+        } catch (e) { 
+            // Если бэкенд отклонил из-за правила 10 часов, покажем его ошибку
+            showToast(e.message, 'error'); 
+        }
     }
-
-    async function deleteSlot(date) {
-        if (!confirm(`Удалить слот на ${date}?`)) return;
+    async function deleteSlot(date, time) {
+        if (!confirm(`Удалить слот на ${date} в ${time}?`)) return;
         try {
-            await apiCall('DELETE', 'deleteSlot', { params: { date } });
+            // Передаем оба параметра, чтобы бэкенд нашел точное совпадение
+            await apiCall('DELETE', 'deleteSlot', { params: { date, time } });
             showToast('Слот удалён', 'success');
             loadSchedule();
         } catch (e) { showToast(e.message, 'error'); }
