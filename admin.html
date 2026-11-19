@@ -130,7 +130,48 @@
         .expand-icon.rotated { 
             transform: rotate(90deg);
         }
-    
+        /* Стили для пакетного создания расписания */
+        .recurring-panel {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: none; /* Скрыто по умолчанию */
+        }
+        .recurring-panel.active {
+            display: block;
+        }
+        .days-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 8px 0 16px 0;
+        }
+        .day-checkbox {
+            display: none;
+        }
+        .day-label {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .day-checkbox:checked + .day-label {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+        .day-checkbox:disabled + .day-label {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -178,7 +219,17 @@
             <!-- Вкладка: Расписание -->
             <div id="view-schedule" class="card hidden">
                 <h3>Управление слотами</h3>
-                <div class="inline-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                
+                <!-- Переключатель режима -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                        <input type="checkbox" id="toggle-recurring" onchange="toggleRecurringMode()">
+                        Создать расписание на несколько недель (пакетно)
+                    </label>
+                </div>
+
+                <!-- Обычная форма (для разового слота) -->
+                <div id="single-slot-form" class="inline-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
                     <div class="form-group">
                         <label>Дата</label>
                         <input type="date" id="new-slot-date">
@@ -188,7 +239,7 @@
                         <input type="time" id="new-slot-time">
                     </div>
                     <div class="form-group">
-                        <label>Доп. текст (необязательно)</label>
+                        <label>Доп. текст</label>
                         <input type="text" id="new-slot-display" placeholder="Оставьте пустым для 'Отработка'">
                     </div>
                     <div class="form-group" style="max-width: 80px;">
@@ -197,6 +248,48 @@
                     </div>
                     <button class="btn btn-primary" onclick="addSlot()" style="height: 42px;">Добавить</button>
                 </div>
+
+                <!-- Пакетная форма (для расписания на недели) -->
+                <div id="recurring-slot-form" class="recurring-panel">
+                    <div class="inline-form" style="margin-bottom: 12px;">
+                        <div class="form-group">
+                            <label>Начать с недели, содержащей дату:</label>
+                            <input type="date" id="recur-start-date">
+                        </div>
+                        <div class="form-group" style="max-width: 100px;">
+                            <label>Кол-во недель:</label>
+                            <input type="number" id="recur-weeks" value="4" min="1" max="52">
+                        </div>
+                    </div>
+                    
+                    <label style="font-weight: 600; font-size: 0.9rem;">Выберите дни недели:</label>
+                    <div class="days-selector">
+                        <label><input type="checkbox" class="day-checkbox" value="1" disabled><span class="day-label">Пн</span></label>
+                        <label><input type="checkbox" class="day-checkbox" value="2" disabled><span class="day-label">Вт</span></label>
+                        <label><input type="checkbox" class="day-checkbox" value="3" disabled><span class="day-label">Ср</span></label>
+                        <label><input type="checkbox" class="day-checkbox" value="4" disabled><span class="day-label">Чт</span></label>
+                        <label><input type="checkbox" class="day-checkbox" value="5" disabled><span class="day-label">Пт</span></label>
+                        <label><input type="checkbox" class="day-checkbox" value="6" disabled><span class="day-label">Сб</span></label>
+                        <label><input type="checkbox" class="day-checkbox" value="7" disabled><span class="day-label">Вс</span></label>
+                    </div>
+
+                    <div class="inline-form">
+                        <div class="form-group" style="max-width: 120px;">
+                            <label>Время для всех дней:</label>
+                            <input type="time" id="recur-time">
+                        </div>
+                        <div class="form-group">
+                            <label>Доп. текст (общий):</label>
+                            <input type="text" id="recur-display" placeholder="Оставьте пустым для 'Отработка'">
+                        </div>
+                        <div class="form-group" style="max-width: 80px;">
+                            <label>Мест:</label>
+                            <input type="number" id="recur-max" value="7" min="1">
+                        </div>
+                        <button class="btn btn-primary" onclick="addBulkSlots()" style="height: 42px;">Создать расписание</button>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <table id="schedule-table">
                         <thead>
@@ -474,7 +567,73 @@
             // Опционально: можно перезагрузить и расписание, чтобы обновился счётчик
         } catch (e) { showToast(e.message, 'error'); }
     }
+    function toggleRecurringMode() {
+        const isRecurring = document.getElementById('toggle-recurring').checked;
+        const singleForm = document.getElementById('single-slot-form');
+        const recurringForm = document.getElementById('recurring-slot-form');
+        const dayCheckboxes = document.querySelectorAll('.day-checkbox');
 
+        if (isRecurring) {
+            singleForm.style.display = 'none';
+            recurringForm.classList.add('active');
+            dayCheckboxes.forEach(cb => cb.disabled = false);
+            
+            // Устанавливаем дату начала на сегодня по умолчанию
+            if (!document.getElementById('recur-start-date').value) {
+                document.getElementById('recur-start-date').value = new Date().toISOString().split('T')[0];
+            }
+        } else {
+            singleForm.style.display = 'flex';
+            recurringForm.classList.remove('active');
+            dayCheckboxes.forEach(cb => {
+                cb.disabled = true;
+                cb.checked = false;
+            });
+        }
+    }
+
+    async function addBulkSlots() {
+        const startDate = document.getElementById('recur-start-date').value;
+        const weeks = parseInt(document.getElementById('recur-weeks').value);
+        const time = document.getElementById('recur-time').value;
+        const display = document.getElementById('recur-display').value.trim();
+        const max = parseInt(document.getElementById('recur-max').value);
+        
+        // Собираем выбранные дни недели (массив чисел)
+        const selectedDays = [];
+        document.querySelectorAll('.day-checkbox:checked').forEach(cb => {
+            selectedDays.push(parseInt(cb.value));
+        });
+
+        if (!startDate || selectedDays.length === 0 || !time || !weeks || !max) {
+            return showToast('Заполните дату начала, выберите хотя бы один день недели, время и места', 'error');
+        }
+
+        try {
+            const res = await apiCall('POST', 'addBulkSlots', { 
+                body: { 
+                    start_date: startDate, 
+                    days_of_week: selectedDays, 
+                    time: time, 
+                    display: display, 
+                    max: max, 
+                    weeks_count: weeks 
+                } 
+            });
+            
+            showToast(res.message || 'Расписание успешно создано', 'success');
+            
+            // Сброс формы
+            document.querySelectorAll('.day-checkbox:checked').forEach(cb => cb.checked = false);
+            document.getElementById('recur-time').value = '';
+            document.getElementById('recur-display').value = '';
+            
+            loadSchedule();
+        } catch (e) { 
+            showToast(e.message, 'error'); 
+        }
+    }
+    
     // === ДЕЙСТВИЯ: РАСПИСАНИЕ ===
     async function loadSchedule() {
         try {
