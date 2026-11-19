@@ -229,7 +229,7 @@
             border-radius: 8px;
             border: 1px solid var(--border);
         }
-        
+
         .back-link{ 
             display: inline-block; 
             margin-top: 16px; 
@@ -280,7 +280,8 @@
                         <a href="/policy.html" target="_blank">Политикой обработки ПДн</a>
                     </label>
                 </div>
-
+                <!-- Honeypot: невидимое поле для ловли ботов -->
+                <input type="text" id="honeypot-field" name="website_check" style="display: none !important;" tabindex="-1" autocomplete="off">
                 <button type="submit" class="submit-btn" id="submit-btn" disabled>Записаться</button>
             </form>
             
@@ -464,6 +465,13 @@
     async function handleSubmit(e) {
         e.preventDefault();
         if (!selectedSlot) return;
+
+        const honeypot = document.getElementById('honeypot-field').value;
+        if (honeypot) {
+            // Если поле заполнено, это бот. Молча игнорируем или показываем фейковый успех.
+            console.warn('Bot detected via honeypot');
+            return; 
+        }
 
         const childName = document.getElementById('child-name').value.trim();
         const parentName = document.getElementById('parent-name').value.trim();
