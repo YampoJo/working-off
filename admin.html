@@ -320,8 +320,8 @@
     // === ДЕЙСТВИЯ: РАСПИСАНИЕ ===
     async function loadSchedule() {
         try {
-            const res = await fetch(API_URL); 
-            const data = await res.json();
+            // Используем админский эндпоинт, который возвращает ВСЕ слоты
+            const data = await apiCall('GET', 'adminSchedule');
             const tbody = document.getElementById('schedule-tbody');
             tbody.innerHTML = '';
             
