@@ -172,6 +172,50 @@
             color: #94a3b8;
             cursor: not-allowed;
         }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-overlay.hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            animation: slideIn 0.25s ease;
+        }
+        .modal-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        .modal-message {
+            font-size: 1rem;
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .modal-buttons .btn { min-width: 100px; }
+
     </style>
 </head>
 <body>
@@ -328,6 +372,17 @@
 
     <div id="toast" class="toast"></div>
 
+    <!-- Универсальное модальное окно -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-icon" id="modal-icon">⚠️</div>
+            <div class="modal-message" id="modal-message"></div>
+            <div class="modal-buttons" id="modal-buttons">
+                <button class="btn btn-primary" id="modal-ok">ОК</button>
+            </div>
+        </div>
+    </div>
+
 <script>
     // ⚙️ КОНФИГУРАЦИЯ
     const API_URL = 'https://functions.yandexcloud.net/d4e1m42j6h2ei9q4c1gj';
@@ -410,6 +465,49 @@
         if (tabName === 'bookings') loadBookings();
         if (tabName === 'schedule') loadSchedule();
         if (tabName === 'admins') loadAdmins();
+    }
+
+    // Универсальная система модальных окон
+    function showModal({ message, icon = '⚠️', buttons = [{ text: 'ОК', type: 'primary', value: true }] }) {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('modal-overlay');
+            const iconEl = document.getElementById('modal-icon');
+            const msgEl = document.getElementById('modal-message');
+            const btnsEl = document.getElementById('modal-buttons');
+            
+            iconEl.textContent = icon;
+            msgEl.textContent = message;
+            btnsEl.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = `btn btn-${btn.type || 'primary'}`;
+                button.textContent = btn.text;
+                button.onclick = () => {
+                    overlay.classList.add('hidden');
+                    resolve(btn.value);
+                };
+                btnsEl.appendChild(button);
+            });
+            
+            overlay.classList.remove('hidden');
+        });
+    }
+
+    // Удобные обёртки
+    function showAlert(message, icon = 'ℹ️') {
+        return showModal({ message, icon, buttons: [{ text: 'ОК', type: 'primary', value: true }] });
+    }
+
+    function showConfirm(message, icon = '⚠️') {
+        return showModal({
+            message, 
+            icon,
+            buttons: [
+                { text: 'Отмена', type: 'secondary', value: false },
+                { text: 'Подтвердить', type: 'danger', value: true }
+            ]
+        });
     }
 
     // === API CALLS ===
@@ -521,7 +619,11 @@
                                         <tr>
                                             <td>${b.childName}</td>
                                             <td>${b.parentName}</td>
-                                            <td>${b.phone}</td>
+                                            <td>
+                                                <a href="https://max.ru/phone/${encodeURIComponent(b.phone)}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 500;">
+                                                    ${b.phone} ↗
+                                                </a>
+                                            </td>
                                             <td style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Отменить</button>
@@ -558,14 +660,17 @@
     }
 
     async function deleteBooking(bookingId) {
-        if (!confirm('Вы уверены, что хотите отменить эту запись ребёнка?')) return;
+        const confirmed = await showConfirm('Вы уверены, что хотите отменить эту запись ребёнка?', '🗑️');
+        if (!confirmed) return;
         try {
             await apiCall('DELETE', 'deleteBooking', { params: { id: bookingId } });
             showToast('Запись отменена', 'success');
             loadBookings();
-        } catch (e) { showToast(e.message, 'error'); }
+        } catch (e) { 
+            await showAlert(e.message, '❌'); 
+        }
     }
-    
+
     function toggleRecurringMode() {
         const isRecurring = document.getElementById('toggle-recurring').checked;
         const singleForm = document.getElementById('single-slot-form');
@@ -698,18 +803,23 @@
         }
     }
     async function deleteSlot(date, time, bookedCount) {
-        let confirmMsg = `Удалить слот на ${date} в ${time}?`;
+        let msg = `Удалить слот на ${date} в ${time}?`;
+        let icon = '🗑️';
         if (bookedCount > 0) {
-            confirmMsg = `⚠️ ВНИМАНИЕ!\n\nНа этот слот уже записано детей: ${bookedCount}.\n\nВы уверены? Не забыли уведомить родителей об отмене?`;
+            msg = `ВНИМАНИЕ!\n\nНа этот слот уже записано детей: ${bookedCount}.\n\nВы уверены? Не забыли уведомить родителей об отмене?`;
+            icon = '🚨';
         }
         
-        if (!confirm(confirmMsg)) return;
+        const confirmed = await showConfirm(msg, icon);
+        if (!confirmed) return;
         
         try {
             await apiCall('DELETE', 'deleteSlot', { params: { date, time } });
             showToast('Слот удалён', 'success');
             loadSchedule();
-        } catch (e) { showToast(e.message, 'error'); }
+        } catch (e) { 
+            await showAlert(e.message, '❌'); 
+        }
     }
 
     // === ДЕЙСТВИЯ: АДМИНЫ (Master only) ===
@@ -742,13 +852,16 @@
     }
 
     async function deleteAdmin(login) {
-        if (!confirm(`Удалить админа ${login}?`)) return;
+        const confirmed = await showConfirm(`Удалить админа ${login}?`, '🗑️');
+        if (!confirmed) return;
         try {
             await apiCall('DELETE', 'deleteAdmin', { params: { login } });
             showToast('Админ удалён', 'success');
             loadAdmins();
-        } catch (e) { showToast(e.message, 'error'); }
-    }
+        } catch (e) { 
+            await showAlert(e.message, '❌'); 
+        }
+    }   
 
     // === УТИЛИТЫ ===
     function showToast(msg, type = 'success') {
