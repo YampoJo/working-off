@@ -524,7 +524,7 @@
                                             <td>${b.phone}</td>
                                             <td style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
                                             <td>
-                                                <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.date}', '${b.time}', '${b.phone}')">Отменить</button>
+                                                <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Отменить</button>
                                             </td>
                                         </tr>
                                     `;
@@ -557,15 +557,15 @@
         return days[date.getDay()];
     }
 
-    async function deleteBooking(date, time, phone) {
+    async function deleteBooking(bookingId) {
         if (!confirm('Вы уверены, что хотите отменить эту запись ребёнка?')) return;
         try {
-            await apiCall('DELETE', 'deleteBooking', { params: { date, time, phone } });
+            await apiCall('DELETE', 'deleteBooking', { params: { id: bookingId } });
             showToast('Запись отменена', 'success');
-            loadBookings(); // Перезагружаем список
-            // Опционально: можно перезагрузить и расписание, чтобы обновился счётчик
+            loadBookings();
         } catch (e) { showToast(e.message, 'error'); }
     }
+    
     function toggleRecurringMode() {
         const isRecurring = document.getElementById('toggle-recurring').checked;
         const singleForm = document.getElementById('single-slot-form');
