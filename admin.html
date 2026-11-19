@@ -614,7 +614,15 @@
                             </thead>
                             <tbody>
                                 ${slot.bookings.map(b => {
-                                    const createdAt = new Date(b.createdAt).toLocaleString('ru-RU');
+                                    const createdAt = new Date(b.createdAt + '+03:00').toLocaleString('ru-RU', { 
+                                        timeZone: 'Europe/Moscow',
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit'
+                                    });
                                     return `
                                         <tr>
                                             <td>${b.childName}</td>
