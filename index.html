@@ -240,11 +240,118 @@
         }
 
         .back-link:hover{color: var(--primary);}
-        
+        /* === ШАПКА ФИЛИАЛА === */
+        .branch-header {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .header-top { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid var(--border); 
+            padding-bottom: 16px; 
+        }
+        .header-top h1 { 
+            font-size: 1.5rem; 
+            color: var(--primary); 
+            margin-bottom: 8px; 
+        }
+        .header-address { 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+            line-height: 1.4; 
+        }
+        .header-contacts { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; 
+            margin-bottom: 20px; 
+        }
+        @media (max-width: 600px) { 
+            .header-contacts { grid-template-columns: 1fr; } 
+        }
+        .contact-block { 
+            background: #f8fafc; 
+            padding: 16px; 
+            border-radius: 8px; 
+        }
+        .contact-block h3 { 
+            font-size: 1rem; 
+            margin-bottom: 8px; 
+            color: var(--text); 
+        }
+        .contact-block p { 
+            margin: 4px 0; 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+        }
+        .contact-block a { 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: 500; 
+        }
+        .contact-block a:hover { 
+            text-decoration: underline; 
+        }
+        .header-socials { 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+        }
+        .social-btn { 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            color: white;
+            transition: opacity 0.2s; 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .social-btn:hover { opacity: 0.85; }
+        .max-btn { background: #0077FF; } 
+        .tg-btn { background: #24A1DE; } 
     </style>
 </head>
 <body>
     <div class="container">
+        <header class="branch-header">
+            <div class="header-top">
+                <h1>Академия Топ Юго-Западная</h1>
+                <p class="header-address">📍 г. Москва, ул. Покрышкина, д. 8, корп. 1 (офис 7, 2 этаж; рядом с м. «Юго-Западная» и «Озёрная»)</p>
+            </div>
+            
+            <div class="header-contacts">
+                <div class="contact-block">
+                    <h3>📚 Учебная часть</h3>
+                    <p>🕒 с 10:00 до 19:00</p>
+                    <p><a href="tel:+74953201101">+7 495 320-11-01</a></p>
+                    <p><a href="mailto:uz@top-academy.ru">uz@top-academy.ru</a></p>
+                </div>
+                <div class="contact-block">
+                    <h3>🎓 Приемная комиссия</h3>
+                    <p>🕒 с 10:00 до 19:00</p>
+                    <p><a href="tel:+74992293054">+7 499 229-30-54</a></p>
+                    <p><a href="mailto:uz@top-academy.ru">uz@top-academy.ru</a></p>
+                </div>
+            </div>
+
+            <div class="header-socials">
+                <a href="https://max.ru/u/f9LHodD0cOK1iath7xqzRuKD0rfuIqmfODyrvqlW5S5kcExY1nF_te9qJTg" target="_blank" class="social-btn max-btn">
+                    MAX
+                </a>
+                <a href="https://t.me/+79891046620" target="_blank" class="social-btn tg-btn">
+                    Telegram
+                </a>
+            </div>
+        </header>
+
         <h1>Запись на отработку</h1>
         <p class="subtitle">Выберите свободную дату и заполните форму</p>
 
@@ -276,8 +383,8 @@
                 <div class="pdn-checkbox">
                     <input type="checkbox" id="pdn-agree" required>
                     <label for="pdn-agree">
-                        Я даю согласие на обработку персональных данных в соответствии с 
-                        <a href="https://yampojo.github.io/working-off/policy.html" target="_blank">Политикой обработки ПДн</a>
+                        Я даю Согласие на обработку персональных данных моих и моего несовершеннолетнего ребёнка и подтверждаю, что ознакомлен(а) с  
+                        <a href="https://yampojo.github.io/working-off/policy.html" target="_blank">Политикой обработки персональных данных.</a>
                     </label>
                 </div>
                 <!-- Honeypot: невидимое поле для ловли ботов -->
