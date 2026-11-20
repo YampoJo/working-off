@@ -64,22 +64,144 @@
             border: 1px solid var(--border); 
         }
 
-        .dates-grid{ 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-            gap: 12px; 
-            margin-bottom: 20px; 
+        /* === КАЛЕНДАРНАЯ СЕТКА === */
+        .calendar-wrapper {
+            margin-bottom: 24px;
         }
-        
-        .date-btn{ 
-            background: var(--card-bg); 
-            border: 2px solid var(--border); 
-            border-radius: 10px; 
-            
-            padding: 16px 12px; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
+        .week-header {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 700px) {
+            .dates-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+            }
+        }
+
+        /* Заголовки дней недели */
+        .day-name {
             text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .day-name.weekend {
+            color: var(--error);
+            opacity: 0.7;
+        }
+
+        /* Ячейка дня */
+        .day-cell {
+            min-height: 90px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .day-cell.weekend {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        .day-cell.empty {
+            background: #f1f5f9;
+            opacity: 0.5;
+        }
+        @media (max-width: 700px) {
+            .day-cell {
+                min-height: 60px;
+                padding: 2px;
+            }
+        }
+
+        /* Карточка слота (компактная) */
+        .date-btn {
+            background: white;
+            border: 1.5px solid var(--primary);
+            border-radius: 6px;
+            padding: 6px 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+        }
+        .date-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.03);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+        .date-btn:hover:not(:disabled) .slot-datetime {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .date-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-hover);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+        }
+        .date-btn.active .slot-datetime {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .date-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: var(--text-muted);
+        }
+
+        .slot-name {
+            font-weight: 600;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .slot-datetime {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .slot-status {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-top: 2px;
+        }
+        .slot-status.full {
+            color: var(--error);
+        }
+
+        /* Пустое состояние */
+        .empty-calendar {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px dashed var(--border);
         }
 
         .date-btn:hover:not(:disabled){ 
@@ -357,7 +479,7 @@
 
         <div id="step-dates" class="card">
             <div id="loading" class="loading">Загрузка расписания...</div>
-            <div id="dates-grid" class="dates-grid hidden"></div>
+            <div id="dates-grid" class="hidden" style="display: flex; flex-direction: column; gap: 20px;"></div>
             <div id="load-error" class="message error hidden"></div>
         </div>
 
@@ -497,49 +619,141 @@
         return days[date.getDay()];
     }
 
+    function getWeekKey(dateStr) {
+        // Возвращает ISO-неделю: "2026-W47"
+        const date = new Date(dateStr + 'T00:00:00');
+        const janFirst = new Date(date.getFullYear(), 0, 1);
+        const daysSinceJanFirst = Math.floor((date - janFirst) / 86400000);
+        const weekNumber = Math.ceil((daysSinceJanFirst + janFirst.getDay() + 1) / 7);
+        return `${date.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
+    }
+
+    function getWeekMonday(dateStr) {
+        const date = new Date(dateStr + 'T00:00:00');
+        const day = date.getDay(); // 0=Вс, 1=Пн, ...
+        const diff = day === 0 ? -6 : 1 - day; // Сдвигаем к понедельнику
+        const monday = new Date(date);
+        monday.setDate(date.getDate() + diff);
+        return monday;
+    }
+
+    function formatDateShort(date) {
+        return `${date.getDate()}.${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    }
+
     function renderSlots(slots) {
         els.loading.classList.add('hidden');
         els.datesGrid.innerHTML = '';
 
         if (!slots || slots.length === 0) {
-            els.datesGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">Нет доступных дат</p>';
+            els.datesGrid.innerHTML = '<div class="empty-calendar">Нет доступных дат для записи</div>';
             els.datesGrid.classList.remove('hidden');
             return;
         }
 
-        const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня", 
+        const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
                             "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+        const dayNamesShort = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
 
+        // 1. Группируем слоты по неделям
+        const weeksMap = {};
         slots.forEach(slot => {
-            const free = slot.max - slot.booked;
-            const isFull = free <= 0;
-            
-            // Формируем строку даты и времени: "20 ноября (ПТ), 10:00"
-            const dateObj = new Date(slot.date + 'T00:00:00');
-            const dayName = getDayOfWeek(slot.date);
-            const datetimeStr = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} (${dayName}), ${slot.time}`;
-            
-            // Название: кастомное (если не "Отработка") или просто "Отработка"
-            const slotName = (slot.display && slot.display !== "Отработка") ? slot.display : "Отработка";
-            
-            const btn = document.createElement('button');
-            btn.className = 'date-btn';
-            btn.disabled = isFull;
-            btn.innerHTML = `
-                <div class="date-title">
-                    <div class="slot-name">${slotName}</div>
-                    <div class="slot-datetime">${datetimeStr}</div>
-                </div>
-                <div class="date-status ${isFull ? 'status-full' : 'status-free'}">
-                    ${isFull ? 'Мест нет' : `Свободно: ${free} из ${slot.max}`}
-                </div>
-            `;
-            
-            if (!isFull) {
-                btn.addEventListener('click', () => selectSlot(slot, btn, datetimeStr, slotName));
+            const weekKey = getWeekKey(slot.date);
+            if (!weeksMap[weekKey]) {
+                weeksMap[weekKey] = {
+                    monday: getWeekMonday(slot.date),
+                    slots: []
+                };
             }
+            weeksMap[weekKey].slots.push(slot);
+        });
+
+        // 2. Сортируем недели по дате
+        const sortedWeeks = Object.values(weeksMap).sort((a, b) => a.monday - b.monday);
+
+        // 3. Рендерим каждую неделю как отдельный календарь
+        sortedWeeks.forEach(week => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'calendar-wrapper';
+
+            // Заголовок недели
+            const monday = week.monday;
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
             
-            els.datesGrid.appendChild(btn);
+            const weekTitle = document.createElement('div');
+            weekTitle.className = 'week-header';
+            weekTitle.textContent = `📅 ${formatDateShort(monday)} — ${formatDateShort(sunday)} ${monday.getFullYear()}`;
+            wrapper.appendChild(weekTitle);
+
+            // Сетка 7 колонок
+            const grid = document.createElement('div');
+            grid.className = 'dates-grid';
+
+            // Заголовки дней недели
+            dayNamesShort.forEach((name, idx) => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-name' + (idx >= 5 ? ' weekend' : '');
+                dayHeader.textContent = name;
+                grid.appendChild(dayHeader);
+            });
+
+            // Группируем слоты по дням внутри недели (0=Пн, 6=Вс)
+            const slotsByDay = {};
+            week.slots.forEach(slot => {
+                const slotDate = new Date(slot.date + 'T00:00:00');
+                const dayOfWeek = slotDate.getDay(); // 0=Вс, 1=Пн, ...
+                const jsDayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // 0=Пн, 6=Вс
+                if (!slotsByDay[jsDayIdx]) slotsByDay[jsDayIdx] = [];
+                slotsByDay[jsDayIdx].push(slot);
+            });
+
+            // Рендерим 7 ячеек (ПН-ВС)
+            for (let i = 0; i < 7; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell' + (i >= 5 ? ' weekend' : '');
+
+                const daySlots = slotsByDay[i] || [];
+
+                if (daySlots.length === 0) {
+                    cell.classList.add('empty');
+                } else {
+                    daySlots.forEach(slot => {
+                        const free = slot.max - slot.booked;
+                        const isFull = free <= 0;
+
+                        const btn = document.createElement('button');
+                        btn.className = 'date-btn';
+                        btn.disabled = isFull;
+
+                        const slotName = (slot.display && slot.display !== "Отработка") ? slot.display : "Отработка";
+
+                        btn.innerHTML = `
+                            <div class="slot-name" title="${slotName}">${slotName}</div>
+                            <div class="slot-datetime">${slot.time}</div>
+                            <div class="slot-status ${isFull ? 'full' : ''}">
+                                ${isFull ? 'Мест нет' : `${free}/${slot.max}`}
+                            </div>
+                        `;
+
+                        if (!isFull) {
+                            btn.addEventListener('click', () => {
+                                const dateObj = new Date(slot.date + 'T00:00:00');
+                                const dayName = getDayOfWeek(slot.date);
+                                const datetimeStr = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} (${dayName}), ${slot.time}`;
+                                selectSlot(slot, btn, datetimeStr, slotName);
+                            });
+                        }
+
+                        cell.appendChild(btn);
+                    });
+                }
+
+                grid.appendChild(cell);
+            }
+
+            wrapper.appendChild(grid);
+            els.datesGrid.appendChild(wrapper);
         });
 
         els.datesGrid.classList.remove('hidden');
