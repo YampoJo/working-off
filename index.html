@@ -3,116 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Запись на отработку занятий</title>
+    <title>Запись на отработку занятий | Академия ТОП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root{
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
+        :root {
+            --primary: #1d4ed8;
+            --primary-hover: #1e40af;
             --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text: #1e293b;
+            --text: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --success: #10b981;
-            --error: #ef4444;
+            --success: #059669;
+            --error: #dc2626;
             --disabled: #cbd5e1;
         }
 
-        *{ 
+        * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
         }
         
-        body{ 
+        body { 
             background-color: var(--bg); 
             color: var(--text); 
             line-height: 1.6; 
-            padding: 20px; 
+            padding: 24px; 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
             align-items: flex-start; 
         }
         
-        .container{ 
-            max-width: 600px; 
+        .container { 
+            max-width: 960px; 
             width: 100%; 
-            margin-top: 40px; 
+            margin-top: 20px; 
         }
         
-        h1{ 
-            font-size: 1.8rem; 
+        h1 { 
+            font-size: 1.75rem; 
+            font-weight: 700;
             margin-bottom: 8px; 
             text-align: center; 
+            color: var(--text);
         }
 
-        .subtitle{ 
+        .subtitle { 
             text-align: center; 
             color: var(--text-muted); 
             margin-bottom: 32px; 
-            font-size: 0.95rem; 
+            font-size: 1rem; 
         }
 
-        .card{ 
+        .card { 
             background: var(--card-bg); 
             border-radius: 12px; 
-            padding: 24px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-            margin-bottom: 20px; 
+            padding: 32px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.05); 
+            margin-bottom: 24px; 
             border: 1px solid var(--border); 
         }
 
+        /* === ШАПКА ФИЛИАЛА === */
+        .branch-header {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .header-top { 
+            text-align: center; 
+            margin-bottom: 24px; 
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border); 
+        }
+        .header-top h2 { 
+            font-size: 1.5rem; 
+            font-weight: 700;
+            color: var(--primary); 
+            margin-bottom: 8px; 
+        }
+        .header-address { 
+            color: var(--text-muted); 
+            font-size: 0.95rem; 
+            line-height: 1.5; 
+        }
+        .header-contacts { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 24px; 
+            margin-bottom: 24px; 
+        }
+        @media (max-width: 600px) { 
+            .header-contacts { grid-template-columns: 1fr; gap: 16px; } 
+        }
+        .contact-block { 
+            background: #f8fafc; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border);
+        }
+        .contact-block h3 { 
+            font-size: 1rem; 
+            font-weight: 600;
+            margin-bottom: 12px; 
+            color: var(--text); 
+        }
+        .contact-block p { 
+            margin: 6px 0; 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+        }
+        .contact-block a { 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: color 0.2s;
+        }
+        .contact-block a:hover { 
+            color: var(--primary-hover);
+            text-decoration: underline; 
+        }
+        .header-socials { 
+            display: flex; 
+            justify-content: center; 
+            gap: 16px; 
+        }
+        .social-btn { 
+            padding: 12px 24px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.95rem; 
+            color: white;
+            transition: all 0.2s; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .social-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .max-btn { background: #0077FF; } 
+        .tg-btn { background: #24A1DE; } 
+
         /* === КАЛЕНДАРНАЯ СЕТКА === */
         .calendar-wrapper {
-            margin-bottom: 24px;
+            margin-bottom: 32px;
         }
         .week-header {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 8px;
+            color: var(--text);
+            margin-bottom: 12px;
             padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .week-header::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 2px;
         }
         .dates-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            margin-bottom: 8px;
+            gap: 8px;
         }
-        @media (max-width: 700px) {
+        
+        @media (max-width: 768px) {
             .dates-grid {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 3px;
+                display: flex;
+                overflow-x: auto;
+                gap: 12px;
+                padding-bottom: 12px;
+                scrollbar-width: thin;
             }
         }
 
-        /* Заголовки дней недели */
         .day-name {
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text-muted);
-            padding: 6px 0;
+            padding: 8px 0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .day-name.weekend {
             color: var(--error);
-            opacity: 0.7;
         }
 
-        /* Ячейка дня */
         .day-cell {
-            min-height: 90px;
+            min-height: 110px;
             background: #f8fafc;
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 4px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            transition: background 0.2s;
         }
         .day-cell.weekend {
             background: #fef2f2;
@@ -120,48 +221,49 @@
         }
         .day-cell.empty {
             background: #f1f5f9;
-            opacity: 0.5;
+            border-style: dashed;
+            opacity: 0.6;
         }
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
             .day-cell {
-                min-height: 60px;
-                padding: 2px;
+                min-width: 130px;
+                flex-shrink: 0;
+                min-height: 100px;
             }
         }
 
-        /* Карточка слота (компактная) */
         .date-btn {
             background: white;
             border: 1.5px solid var(--primary);
             border-radius: 6px;
-            padding: 6px 4px;
+            padding: 8px 6px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
-            font-size: 0.75rem;
-            line-height: 1.2;
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 2px;
+            gap: 4px;
         }
         .date-btn:hover:not(:disabled) {
             background: var(--primary);
             color: white;
-            transform: scale(1.03);
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
         }
-        .date-btn:hover:not(:disabled) .slot-datetime {
+        .date-btn:hover:not(:disabled) .slot-datetime,
+        .date-btn:hover:not(:disabled) .slot-status {
             color: rgba(255, 255, 255, 0.9);
         }
         .date-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary-hover);
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
         }
-        .date-btn.active .slot-datetime {
+        .date-btn.active .slot-datetime,
+        .date-btn.active .slot-status {
             color: rgba(255, 255, 255, 0.9);
         }
         .date-btn:disabled {
@@ -174,18 +276,19 @@
 
         .slot-name {
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
+            line-height: 1.2;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .slot-datetime {
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 500;
         }
         .slot-status {
-            font-size: 0.6rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--success);
             margin-top: 2px;
@@ -194,271 +297,163 @@
             color: var(--error);
         }
 
-        /* Пустое состояние */
         .empty-calendar {
             text-align: center;
-            padding: 40px;
+            padding: 48px;
             color: var(--text-muted);
             background: #f8fafc;
             border-radius: 12px;
             border: 1px dashed var(--border);
+            font-size: 1.05rem;
         }
 
-        .date-btn:hover:not(:disabled){ 
-            border-color: var(--primary); 
-            transform: translateY(-2px); 
+        /* === ФОРМА === */
+        .form-group { 
+            margin-bottom: 20px; 
         }
-
-        .date-btn.active{ 
-            border-color: var(--primary); 
-            background: #eef2ff; 
-        }
-
-        .date-btn:disabled{ 
-            opacity: 0.6; 
-            cursor: not-allowed; 
-            background: #f1f5f9;
-        }
-        
-        .date-title { 
-            font-weight: 600; 
-            font-size: 0.95rem; 
-            margin-bottom: 4px; 
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .slot-name { 
-            color: var(--text);
-            line-height: 1.3;
-        }
-        .slot-datetime { 
-            font-size: 0.8rem; 
-            font-weight: 500;
-            color: var(--text-muted); 
-            font-variant-numeric: tabular-nums;
-        }
-
-        .date-status{ 
-            font-size: 0.8rem; 
-        }
-
-        .status-free{ 
-            color: var(--success); 
-            font-weight: 500;
-        }
-
-        .status-full{ 
-            color: var(--text-muted);
-        }
-
-        .form-group{ 
-            margin-bottom: 16px; 
-        }
-
-        label{ 
+        label { 
             display: block; 
-            font-size: 0.85rem; 
-            font-weight: 500; 
-            margin-bottom: 6px; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            margin-bottom: 8px; 
             color: var(--text); 
         }
-
         input[type="text"], input[type="tel"] {
-            width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
-            font-size: 1rem; transition: border-color 0.2s; outline: none;
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px;
+            font-size: 1rem; 
+            transition: all 0.2s; 
+            outline: none;
+            background: #ffffff;
         }
-
-        input:focus{ 
+        input:focus { 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); 
         }
 
-        .pdn-checkbox{ 
+        .pdn-checkbox { 
             display: flex; 
             align-items: flex-start; 
-            gap: 10px; 
-            margin: 20px 0; 
-            font-size: 0.85rem; 
+            gap: 12px; 
+            margin: 24px 0; 
+            font-size: 0.9rem; 
             color: var(--text-muted); 
+            line-height: 1.5;
         }
-
-        .pdn-checkbox input{ 
-            margin-top: 3px; 
+        .pdn-checkbox input { 
+            margin-top: 4px; 
             accent-color: var(--primary); 
             width: 18px; 
             height: 18px; 
             flex-shrink: 0; 
+            cursor: pointer;
         }
-
-        .pdn-checkbox a{ 
+        .pdn-checkbox a { 
             color: var(--primary); 
             text-decoration: none; 
+            font-weight: 500;
         }
-
-        .pdn-checkbox a:hover{ 
+        .pdn-checkbox a:hover { 
             text-decoration: underline; 
         }
 
         .submit-btn {
             width: 100%; 
-            padding: 14px; 
+            padding: 16px; 
             background: var(--primary); 
             color: white; 
             border: none;
-            border-radius: 10px; 
-            font-size: 1rem; 
+            border-radius: 8px; 
+            font-size: 1.05rem; 
             font-weight: 600; 
             cursor: pointer; 
-            transition: background 0.2s;
+            transition: all 0.2s;
+        }
+        .submit-btn:hover:not(:disabled) { 
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+        }
+        .submit-btn:disabled { 
+            background: var(--disabled); 
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .submit-btn:hover:not(:disabled){ background: var(--primary-hover);}
-        .submit-btn:disabled{ background: var(--disabled); cursor: not-allowed;}
-        .hidden{display: none !important;}
+        .hidden { display: none !important; }
 
-        .message{ 
+        .message { 
             padding: 16px; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             text-align: center; 
             font-weight: 500; 
-            margin-top: 16px;
+            margin-top: 20px;
+            font-size: 0.95rem;
         }
-
-        .message.success{ 
+        .message.success { 
             background: #ecfdf5; 
             color: #065f46;
             border: 1px solid #a7f3d0;
         }
-
-        .message.error{
+        .message.error {
             background: #fef2f2; 
             color: #991b1b; 
             border: 1px solid #fecaca; 
         }
         
-        .loading{ 
+        .loading { 
             text-align: center; 
-            padding: 40px; 
+            padding: 48px; 
             color: var(--text-muted);
+            font-size: 1.05rem;
         }
 
         .selected-date-display { 
-            margin-bottom: 20px; 
+            margin-bottom: 24px; 
             text-align: center; 
-            padding: 12px;
-            background: #f8fafc;
+            padding: 16px;
+            background: #eff6ff;
             border-radius: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid #bfdbfe;
+            color: var(--primary);
         }
 
-        .back-link{ 
-            display: inline-block; 
-            margin-top: 16px; 
-            color: var(--text-muted); 
-            font-size: 0.9rem; 
-            cursor: pointer; 
-            text-decoration: none; 
-        }
-
-        .back-link:hover{color: var(--primary);}
-        /* === ШАПКА ФИЛИАЛА === */
-        .branch-header {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .header-top { 
-            text-align: center; 
-            margin-bottom: 20px; 
-            border-bottom: 1px solid var(--border); 
-            padding-bottom: 16px; 
-        }
-        .header-top h1 { 
-            font-size: 1.5rem; 
-            color: var(--primary); 
-            margin-bottom: 8px; 
-        }
-        .header-address { 
-            color: var(--text-muted); 
-            font-size: 0.9rem; 
-            line-height: 1.4; 
-        }
-        .header-contacts { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 16px; 
-            margin-bottom: 20px; 
-        }
-        @media (max-width: 600px) { 
-            .header-contacts { grid-template-columns: 1fr; } 
-        }
-        .contact-block { 
-            background: #f8fafc; 
-            padding: 16px; 
-            border-radius: 8px; 
-        }
-        .contact-block h3 { 
-            font-size: 1rem; 
-            margin-bottom: 8px; 
-            color: var(--text); 
-        }
-        .contact-block p { 
-            margin: 4px 0; 
-            font-size: 0.9rem; 
-            color: var(--text-muted); 
-        }
-        .contact-block a { 
-            color: var(--primary); 
-            text-decoration: none; 
-            font-weight: 500; 
-        }
-        .contact-block a:hover { 
-            text-decoration: underline; 
-        }
-        .header-socials { 
-            display: flex; 
-            justify-content: center; 
-            gap: 12px; 
-        }
-        .social-btn { 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            font-size: 0.9rem; 
-            color: white;
-            transition: opacity 0.2s; 
-            display: flex;
+        .back-link { 
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            margin-top: 20px; 
+            color: var(--text-muted); 
+            font-size: 0.95rem; 
+            font-weight: 500;
+            cursor: pointer; 
+            text-decoration: none; 
+            transition: color 0.2s;
         }
-        .social-btn:hover { opacity: 0.85; }
-        .max-btn { background: #0077FF; } 
-        .tg-btn { background: #24A1DE; } 
+        .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="branch-header">
             <div class="header-top">
-                <h1>Академия Топ Юго-Западная</h1>
+                <h2>Академия ТОП Юго-Западная</h2>
                 <p class="header-address">г. Москва, ул. Покрышкина, д. 8, корп. 1 (офис 7, 2 этаж; рядом с м. «Юго-Западная» и «Озёрная»)</p>
             </div>
             
             <div class="header-contacts">
                 <div class="contact-block">
                     <h3>Учебная часть</h3>
-                    <p>с 10:00 до 19:00</p>
+                    <p>Ежедневно с 10:00 до 19:00</p>
                     <p><a href="tel:+74953201101">+7 495 320-11-01</a></p>
                     <p><a href="mailto:uz@top-academy.ru">uz@top-academy.ru</a></p>
                 </div>
                 <div class="contact-block">
                     <h3>Приемная комиссия</h3>
-                    <p>с 10:00 до 19:00</p>
+                    <p>Ежедневно с 10:00 до 19:00</p>
                     <p><a href="tel:+74992293054">+7 499 229-30-54</a></p>
                     <p><a href="mailto:uz@top-academy.ru">uz@top-academy.ru</a></p>
                 </div>
@@ -475,11 +470,11 @@
         </header>
 
         <h1>Запись на отработку</h1>
-        <p class="subtitle">Выберите свободную дату и заполните форму</p>
+        <p class="subtitle">Выберите свободную дату в календаре и заполните форму</p>
 
         <div id="step-dates" class="card">
             <div id="loading" class="loading">Загрузка расписания...</div>
-            <div id="dates-grid" class="hidden" style="display: flex; flex-direction: column; gap: 20px;"></div>
+            <div id="dates-grid" class="hidden" style="display: flex; flex-direction: column; gap: 32px;"></div>
             <div id="load-error" class="message error hidden"></div>
         </div>
 
@@ -498,7 +493,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="phone">Номер телефона родителя*</label>
+                    <label for="phone">Номер телефона родителя *</label>
                     <input type="tel" id="phone" required placeholder="+7 (999) 123-45-67">
                 </div>
 
@@ -509,7 +504,7 @@
                         <a href="https://yampojo.github.io/working-off/policy.html" target="_blank">Политикой обработки персональных данных.</a>
                     </label>
                 </div>
-                <!-- Honeypot: невидимое поле для ловли ботов -->
+                
                 <input type="text" id="honeypot-field" name="website_check" style="display: none !important;" tabindex="-1" autocomplete="off">
                 <button type="submit" class="submit-btn" id="submit-btn" disabled>Записаться</button>
             </form>
@@ -520,16 +515,15 @@
 
         <div id="step-success" class="card hidden">
             <div class="message success">Вы успешно записаны!</div>
-            <p style="text-align:center; margin-top:12px; color:var(--text-muted);">
+            <p style="text-align:center; margin-top:16px; color:var(--text-muted); font-size: 1.05rem;">
                 Мы свяжемся с вами для подтверждения.<br>
-                <a class="back-link" id="new-booking">Записать ещё одного ребёнка →</a>
+                <a class="back-link" id="new-booking" style="margin-top: 16px; justify-content: center;">Записать ещё одного ребёнка →</a>
             </p>
         </div>
     </div>
 
 <script>
     const API_URL = 'https://functions.yandexcloud.net/d4e1m42j6h2ei9q4c1gj';
-
     let selectedSlot = null;
 
     const els = {
@@ -548,11 +542,9 @@
         newBooking: document.getElementById('new-booking')
     };
 
-    // Автоматическое форматирование телефона: +7 (999) 888-77-66
     function formatPhone(value) {
-        const numbers = value.replace(/\D/g, ''); // Только цифры
+        const numbers = value.replace(/\D/g, '');
         if (numbers.length === 0) return '';
-        
         let res = '+7';
         if (numbers.length > 1) res += ' (' + numbers.substring(1, 4);
         if (numbers.length >= 5) res += ') ' + numbers.substring(4, 7);
@@ -561,12 +553,10 @@
         return res;
     }
 
-    // Авто-капитализация первой буквы каждого слова
     function capitalizeWords(str) {
         return str.replace(/\b\w/g, char => char.toUpperCase());
     }
 
-    // Навешиваем обработчики на поля ввода
     document.getElementById('phone').addEventListener('input', function(e) {
         e.target.value = formatPhone(e.target.value);
     });
@@ -614,13 +604,11 @@
 
     function getDayOfWeek(dateStr) {
         const days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
-        // Добавляем T00:00:00, чтобы браузер не сдвигал дату из-за часового пояса
         const date = new Date(dateStr + 'T00:00:00');
         return days[date.getDay()];
     }
 
     function getWeekKey(dateStr) {
-        // Возвращает ISO-неделю: "2026-W47"
         const date = new Date(dateStr + 'T00:00:00');
         const janFirst = new Date(date.getFullYear(), 0, 1);
         const daysSinceJanFirst = Math.floor((date - janFirst) / 86400000);
@@ -630,8 +618,8 @@
 
     function getWeekMonday(dateStr) {
         const date = new Date(dateStr + 'T00:00:00');
-        const day = date.getDay(); // 0=Вс, 1=Пн, ...
-        const diff = day === 0 ? -6 : 1 - day; // Сдвигаем к понедельнику
+        const day = date.getDay();
+        const diff = day === 0 ? -6 : 1 - day;
         const monday = new Date(date);
         monday.setDate(date.getDate() + diff);
         return monday;
@@ -651,46 +639,36 @@
             return;
         }
 
-        const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
-                            "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+        const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
         const dayNamesShort = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
 
-        // 1. Группируем слоты по неделям
         const weeksMap = {};
         slots.forEach(slot => {
             const weekKey = getWeekKey(slot.date);
             if (!weeksMap[weekKey]) {
-                weeksMap[weekKey] = {
-                    monday: getWeekMonday(slot.date),
-                    slots: []
-                };
+                weeksMap[weekKey] = { monday: getWeekMonday(slot.date), slots: [] };
             }
             weeksMap[weekKey].slots.push(slot);
         });
 
-        // 2. Сортируем недели по дате
         const sortedWeeks = Object.values(weeksMap).sort((a, b) => a.monday - b.monday);
 
-        // 3. Рендерим каждую неделю как отдельный календарь
         sortedWeeks.forEach(week => {
             const wrapper = document.createElement('div');
             wrapper.className = 'calendar-wrapper';
 
-            // Заголовок недели
             const monday = week.monday;
             const sunday = new Date(monday);
             sunday.setDate(monday.getDate() + 6);
             
             const weekTitle = document.createElement('div');
             weekTitle.className = 'week-header';
-            weekTitle.textContent = `📅 ${formatDateShort(monday)} — ${formatDateShort(sunday)} ${monday.getFullYear()}`;
+            weekTitle.textContent = `Неделя: ${formatDateShort(monday)} — ${formatDateShort(sunday)} ${monday.getFullYear()}`;
             wrapper.appendChild(weekTitle);
 
-            // Сетка 7 колонок
             const grid = document.createElement('div');
             grid.className = 'dates-grid';
 
-            // Заголовки дней недели
             dayNamesShort.forEach((name, idx) => {
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'day-name' + (idx >= 5 ? ' weekend' : '');
@@ -698,41 +676,37 @@
                 grid.appendChild(dayHeader);
             });
 
-            // Группируем слоты по дням внутри недели (0=Пн, 6=Вс)
             const slotsByDay = {};
             week.slots.forEach(slot => {
                 const slotDate = new Date(slot.date + 'T00:00:00');
-                const dayOfWeek = slotDate.getDay(); // 0=Вс, 1=Пн, ...
-                const jsDayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // 0=Пн, 6=Вс
+                const dayOfWeek = slotDate.getDay();
+                const jsDayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
                 if (!slotsByDay[jsDayIdx]) slotsByDay[jsDayIdx] = [];
                 slotsByDay[jsDayIdx].push(slot);
             });
 
-            // Рендерим 7 ячеек (ПН-ВС)
             for (let i = 0; i < 7; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'day-cell' + (i >= 5 ? ' weekend' : '');
-
                 const daySlots = slotsByDay[i] || [];
 
                 if (daySlots.length === 0) {
                     cell.classList.add('empty');
                 } else {
                     daySlots.forEach(slot => {
-                        const free = slot.max - slot.booked;
-                        const isFull = free <= 0;
-
+                        const isFull = slot.booked >= slot.max;
                         const btn = document.createElement('button');
                         btn.className = 'date-btn';
                         btn.disabled = isFull;
 
                         const slotName = (slot.display && slot.display !== "Отработка") ? slot.display : "Отработка";
 
+                        // ИЗМЕНЕНО: теперь показываем booked/max (например, 0/7 или 5/7)
                         btn.innerHTML = `
                             <div class="slot-name" title="${slotName}">${slotName}</div>
                             <div class="slot-datetime">${slot.time}</div>
                             <div class="slot-status ${isFull ? 'full' : ''}">
-                                ${isFull ? 'Мест нет' : `${free}/${slot.max}`}
+                                ${isFull ? 'Мест нет' : `${slot.booked}/${slot.max}`}
                             </div>
                         `;
 
@@ -744,14 +718,11 @@
                                 selectSlot(slot, btn, datetimeStr, slotName);
                             });
                         }
-
                         cell.appendChild(btn);
                     });
                 }
-
                 grid.appendChild(cell);
             }
-
             wrapper.appendChild(grid);
             els.datesGrid.appendChild(wrapper);
         });
@@ -760,23 +731,15 @@
     }
 
     function selectSlot(slot, btnElement, datetimeStr, slotName) {
-        // Сброс активного состояния у всех кнопок
         document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
-        
         selectedSlot = slot;
         
-        // Отображаем выбранное: название + дата/время на отдельных строках
         els.selectedDateText.innerHTML = `
-            <div style="font-size: 1.1rem; font-weight: 600; color: var(--primary); margin-bottom: 4px;">
-                ${slotName}
-            </div>
-            <div style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500;">
-                ${datetimeStr}
-            </div>
+            <div style="font-size: 1.15rem; font-weight: 700; margin-bottom: 4px;">${slotName}</div>
+            <div style="font-size: 1rem; font-weight: 500;">${datetimeStr}</div>
         `;
         
-        // Сброс формы и сообщений
         els.form.reset();
         els.submitBtn.disabled = true;
         hideMessage();
@@ -788,17 +751,12 @@
         if (!selectedSlot) return;
 
         const honeypot = document.getElementById('honeypot-field').value;
-        if (honeypot) {
-            // Если поле заполнено, это бот. Молча игнорируем или показываем фейковый успех.
-            console.warn('Bot detected via honeypot');
-            return; 
-        }
+        if (honeypot) return; 
 
         const childName = document.getElementById('child-name').value.trim();
         const parentName = document.getElementById('parent-name').value.trim();
         const phone = document.getElementById('phone').value.trim();
 
-        // 1. Проверка ФИО на 3 слова
         const childWords = childName.split(/\s+/).filter(w => w.length > 0);
         const parentWords = parentName.split(/\s+/).filter(w => w.length > 0);
         
@@ -811,7 +769,6 @@
             return;
         }
 
-        // 2. Проверка телефона (должен быть полностью заполнен: +7 (XXX) XXX-XX-XX = 18 символов)
         if (phone.length < 18) {
             showMessage('Введите номер телефона полностью в формате +7 (999) 888-77-66', 'error');
             return;
