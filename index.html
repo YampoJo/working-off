@@ -74,8 +74,7 @@
             margin-bottom: 24px; 
             border: 1px solid var(--border); 
         }
-
-        /* === ШАПКА ФИЛИАЛА === */
+        
         .branch-header {
             background: var(--card-bg);
             border-radius: 16px;
@@ -97,7 +96,7 @@
         .logo {
             display: flex;
             align-items: baseline;
-            gap: 2px; /* МИНИМАЛЬНЫЙ ОТСТУП МЕЖДУ Ю и З */
+            gap: 2px;
             font-size: 2.2rem;
             font-weight: 800;
             color: var(--heading);
@@ -179,7 +178,6 @@
         .max-btn { background: #0077FF; } 
         .tg-btn { background: #24A1DE; } 
 
-        /* === КАЛЕНДАРНАЯ СЕТКА === */
         .calendar-wrapper {
             margin-bottom: 32px;
         }
@@ -205,14 +203,12 @@
             border-radius: 2px;
         }
 
-        /* ДЕСКТОП: гибкая сетка */
         .dates-grid {
             display: grid;
             grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: 8px;
         }
         
-        /* МОБИЛЬНЫЕ: фиксированная сетка с горизонтальным скроллом родителя */
         @media (max-width: 900px) {
             .calendar-wrapper {
                 overflow-x: auto;
@@ -225,7 +221,6 @@
             .calendar-wrapper::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
 
             .dates-grid {
-                /* Фиксируем ширину колонок, чтобы сетка не сжималась и скроллилась целиком */
                 grid-template-columns: repeat(7, 130px); 
                 min-width: max-content;
             }
@@ -368,7 +363,6 @@
             font-size: 1.05rem;
         }
 
-        /* === ФОРМА ЗАПИСИ === */
         #step-form, #step-success {
             max-width: 560px;
             margin-left: auto;
@@ -441,7 +435,6 @@
     <div class="container">
         <header class="branch-header">
             <div class="header-brand">
-                <!-- УБРАН logo-suffix, отступ минимальный (gap: 2px в CSS) -->
                 <a href="#" class="logo">Ю<span class="logo-accent">З</span></a>
                 <div class="branch-title">Академия ТОП Юго-Западная</div>
             </div>
