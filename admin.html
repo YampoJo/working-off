@@ -23,14 +23,26 @@
             --danger-hover: #b91c1c;
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        *{ 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        }
         
-        body { background-color: var(--bg); color: var(--text); padding: 24px; min-height: 100vh; }
+        body{ 
+            background-color: var(--bg); 
+            color: var(--text); 
+            padding: 24px; 
+            min-height: 100vh; 
+        }
         
-        .container { max-width: 1080px; margin: 0 auto; }
+        .container{ 
+            max-width: 1080px; 
+            margin: 0 auto; 
+        }
         
-        /* Карточки и общие стили */
-        .card { 
+        .card{ 
             background: var(--card-bg); 
             border-radius: 16px; 
             padding: 32px; 
@@ -39,11 +51,15 @@
             margin-bottom: 24px; 
         }
         
-        h1, h2, h3 { color: var(--heading); font-weight: 700; margin-bottom: 20px; }
-        .hidden { display: none !important; }
+        h1, h2, h3{ 
+            color: var(--heading); 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+        }
+
+        .hidden{ display: none !important; }
         
-        /* Логотип (единый со страницей записи) */
-        .logo-small { 
+        .logo-small{ 
             display: inline-flex; 
             align-items: baseline; 
             gap: 2px; 
@@ -53,8 +69,10 @@
             letter-spacing: -1px; 
             text-decoration: none; 
         }
-        .logo-small .logo-accent { color: var(--accent); }
-        .logo-small .logo-word { 
+
+        .logo-small .logo-accent{ color: var(--accent); }
+
+        .logo-small .logo-word{ 
             font-size: 1rem; 
             font-weight: 600; 
             color: var(--text-muted); 
@@ -62,10 +80,11 @@
             margin-left: 8px; 
         }
         
-        /* Формы */
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--heading); }
-        input { 
+        .form-group{ margin-bottom: 16px; }
+
+        label{ display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--heading); }
+
+        input{ 
             width: 100%; 
             padding: 12px 16px; 
             border: 1.5px solid var(--border); 
@@ -75,10 +94,14 @@
             transition: all 0.2s;
             background: #ffffff;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 196, 140, 0.12); }
-        input::placeholder { color: #94a3b8; }
+
+        input:focus{ 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(0, 196, 140, 0.12); 
+        }
+
+        input::placeholder{ color: #94a3b8; }
         
-        /* Кнопки */
         .btn { 
             padding: 12px 20px; 
             border: none; 
@@ -90,17 +113,52 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 196, 140, 0.3); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: var(--danger-hover); transform: translateY(-1px); }
-        .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: var(--border); }
-        .btn-sm { padding: 8px 14px; font-size: 0.85rem; text-transform: none; letter-spacing: 0; }
-        .btn:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-primary{ 
+            background: var(--primary); 
+            color: white; 
+        }
 
-        /* Навигация и шапка */
-        .header { 
+        .btn-primary:hover{ 
+            background: var(--primary-hover); 
+            transform: translateY(-1px); 
+            box-shadow: 0 4px 12px rgba(0, 196, 140, 0.3); 
+        }
+
+        .btn-danger{ 
+            background: var(--danger); 
+            color: white; 
+        
+        }
+        .btn-danger:hover{ 
+            background: var(--danger-hover); 
+            transform: translateY(-1px); 
+        }
+
+        .btn-secondary{ 
+            background: var(--bg); 
+            color: var(--text); 
+            border: 1px solid var(--border); 
+        }
+
+        .btn-secondary:hover{ 
+            background: var(--border); 
+        }
+
+        .btn-sm{ 
+            padding: 8px 14px; 
+            font-size: 0.85rem; 
+            text-transform: none; 
+            letter-spacing: 0; 
+        }
+
+        .btn:disabled{ 
+            background: var(--text-muted); 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none;
+        }
+
+        .header{ 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -109,8 +167,15 @@
             gap: 16px;
         }
         
-        .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
-        .tab { 
+        .tabs{
+            display: flex; 
+            gap: 4px; 
+            border-bottom: 2px solid var(--border); 
+            margin-bottom: 24px; 
+            overflow-x: auto; 
+        }
+
+        .tab{ 
             padding: 12px 20px; 
             cursor: pointer; 
             font-weight: 600; 
@@ -120,18 +185,55 @@
             transition: all 0.2s; 
             white-space: nowrap;
         }
-        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .tab:hover:not(.active) { color: var(--heading); background: var(--bg); border-radius: 8px 8px 0 0; }
 
-        /* Таблицы (десктоп) */
-        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 600px; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-weight: 700; color: var(--heading); background: var(--bg); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: var(--primary-light); }
+        .tab.active{ 
+            color: var(--primary); 
+            border-bottom-color: var(--primary); 
+        }
 
-        /* Уведомления */
+        .tab:hover:not(.active){ 
+            color: var(--heading); 
+            background: var(--bg);
+            border-radius: 8px 8px 0 0; 
+        }
+
+        .table-container{ 
+            overflow-x: auto; 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+        }
+
+        table{ 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.9rem; 
+            min-width: 600px; 
+        }
+
+        th, td{ 
+            padding: 14px 16px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--border); 
+        }
+
+        th{ 
+            font-weight: 700; 
+            color: var(--heading); 
+            background: var(--bg); 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        
+        }
+        tr:last-child td{ 
+            border-bottom: none; 
+        }
+
+        tr:hover td{ 
+            background: var(--primary-light); 
+        }
+
+
         .toast { 
             position: fixed; bottom: 24px; right: 24px; 
             padding: 14px 24px; border-radius: 10px; 
@@ -140,21 +242,57 @@
             pointer-events: none; z-index: 2000;
             transform: translateY(20px);
         }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.success { background: var(--primary); }
-        .toast.error { background: var(--danger); }
-        
-        .inline-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-        .inline-form .form-group { margin-bottom: 0; flex: 1; min-width: 140px; }
 
-        /* Аккордеон для записей */
-        .slot-group { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: box-shadow 0.2s; }
-        .slot-group:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .slot-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 16px 20px; background: var(--bg); cursor: pointer; transition: background 0.2s; user-select: none;
+        .toast.show{ 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        .toast.success{ 
+            background: var(--primary); 
+        }
+
+        .toast.error{ 
+            background: var(--danger); 
+        }
+        
+        .inline-form{ 
+            display: flex; 
+            gap: 12px; 
+            align-items: flex-end; 
+            flex-wrap: wrap; 
+        }
+
+        .inline-form .form-group{
+            margin-bottom: 0; 
+            flex: 1; 
+            min-width: 140px; 
+        }
+
+        .slot-group{ 
+            margin-bottom: 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            transition: box-shadow 0.2s; 
+        }
+
+        .slot-group:hover{ 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
+        }
+
+        .slot-header{ 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 16px 20px; 
+            background: var(--bg); 
+            cursor: pointer; 
+            transition: background 0.2s; 
+            user-select: none;
             gap: 12px;
         }
+
         .slot-header:hover { background: #f1f5f9; }
         .slot-header.expanded { background: var(--primary-light); border-bottom: 1px solid var(--border); }
         .slot-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
@@ -165,7 +303,7 @@
             border-radius: 20px; 
             font-size: 0.85rem; 
             font-weight: 700; 
-            white-space: nowrap; /* ФИКС: текст больше не переносится */
+            white-space: nowrap;
             flex-shrink: 0;
         }
         .slot-badge.free { background: var(--primary-light); color: var(--primary); }
@@ -179,7 +317,6 @@
         .expand-icon { transition: transform 0.2s; font-size: 1.2rem; color: var(--text-muted); font-weight: 300; }
         .expand-icon.rotated { transform: rotate(90deg); color: var(--primary); }
 
-        /* Пакетное создание */
         .recurring-panel {
             background: var(--primary-light);
             border: 1px solid #a7f3d0;
@@ -189,8 +326,7 @@
             display: none;
         }
         .recurring-panel.active { display: block; }
-        
-        /* ФИКС: grid вместо flex-wrap — кнопки одинаковые и выровнены влево */
+
         .days-selector { 
             display: grid; 
             grid-template-columns: repeat(7, minmax(0, 1fr)); 
@@ -215,8 +351,9 @@
         }
         .day-checkbox:checked + .day-label { background: var(--primary); color: white; border-color: var(--primary); }
         .day-checkbox:disabled + .day-label { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; border-color: transparent; }
+        #view-admins .table-container { max-width: 640px; }
+        #admins-table { min-width: 0; }
 
-        /* Модальное окно */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
@@ -227,15 +364,34 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideIn { from { transform: translateY(-20px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
-        .modal-box {
+        .modal-box{
             background: white; border-radius: 16px; padding: 32px;
             max-width: 440px; width: 90%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.15);
             text-align: center; animation: slideIn 0.25s ease;
         }
-        .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--heading); margin-bottom: 12px; }
-        .modal-message { font-size: 1rem; color: var(--text); line-height: 1.6; margin-bottom: 24px; white-space: pre-line; }
-        .modal-buttons { display: flex; gap: 12px; justify-content: center; }
+        
+        .modal-title{ 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: var(--heading); 
+            margin-bottom: 12px; 
+        }
+
+        .modal-message{ 
+            font-size: 1rem; 
+            color: var(--text); 
+            line-height: 1.6; 
+            margin-bottom: 24px; 
+            white-space: pre-line;
+        }
+
+        .modal-buttons{ 
+            display: flex; 
+            gap: 12px; 
+            justify-content: center; 
+        }
+
         .modal-buttons .btn { min-width: 120px; }
 
         /* === АДАПТАЦИЯ ПОД ТЕЛЕФОН === */
@@ -254,12 +410,19 @@
 
         /* ФИКС: таблицы превращаются в карточки на телефоне */
         @media (max-width: 640px) {
-            .table-container { border: none; overflow-x: visible; }
-            .slot-content .table-container { border-top: 1px solid var(--border); }
-            .table-container table { min-width: 0; display: block; }
-            .table-container thead { display: none; }
-            .table-container tbody { display: block; }
-            .table-container tr { 
+            .table-container{ 
+                border: none; 
+                overflow-x: visible; 
+            }
+            .slot-content .table-container{border-top: 1px solid var(--border); }
+            .table-container table{ 
+                min-width: 0; 
+                display: block; 
+            }
+
+            .table-container thead{ display: none; }
+            .table-container tbody{ display: block; }
+            .table-container tr{ 
                 display: block; 
                 border: 1px solid var(--border); 
                 border-radius: 10px; 
@@ -294,7 +457,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- ЭКРАН ЛОГИНА -->
+
         <div id="login-screen" class="card" style="max-width: 440px; margin: 80px auto; text-align: center;">
             <a href="#" class="logo-small" style="margin-bottom: 24px;">Ю<span class="logo-accent">З</span><span class="logo-word">admin</span></a>
             <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Вход в панель управления</h2>
@@ -312,7 +475,6 @@
             </form>
         </div>
 
-        <!-- ЭКРАН ПАНЕЛИ УПРАВЛЕНИЯ -->
         <div id="dashboard-screen" class="hidden">
             <div class="header">
                 <a href="#" class="logo-small">Ю<span class="logo-accent">З</span><span class="logo-word">admin</span></a>
@@ -328,14 +490,12 @@
                 <div class="tab hidden" id="tab-admins" onclick="switchTab('admins')">Администраторы</div>
             </div>
 
-            <!-- Вкладка: Записи -->
             <div id="view-bookings" class="card hidden">
                 <h3>Записи на отработки</h3>
                 <div id="bookings-container"></div>
                 <button class="btn btn-primary btn-sm" onclick="loadBookings()" style="margin-top: 20px; width: auto;">Обновить список</button>
             </div>
 
-            <!-- Вкладка: Расписание -->
             <div id="view-schedule" class="card hidden">
                 <h3>Управление слотами</h3>
                 
@@ -346,7 +506,6 @@
                     </label>
                 </div>
 
-                <!-- Обычная форма -->
                 <div id="single-slot-form" class="inline-form" style="margin-bottom: 24px; padding: 20px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border);">
                     <div class="form-group">
                         <label>Дата</label>
@@ -367,7 +526,6 @@
                     <button class="btn btn-primary" onclick="addSlot()" style="height: 48px; width: auto; min-width: 140px;">Добавить</button>
                 </div>
 
-                <!-- Пакетная форма -->
                 <div id="recurring-slot-form" class="recurring-panel">
                     <div class="inline-form" style="margin-bottom: 16px;">
                         <div class="form-group">
@@ -418,7 +576,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Админы -->
             <div id="view-admins" class="card hidden">
                 <h3>Управление администраторами</h3>
                 <div class="inline-form" style="margin-bottom: 24px; padding: 20px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border);">
@@ -432,7 +589,7 @@
                     </div>
                     <button class="btn btn-primary" onclick="createAdmin()" style="height: 48px; width: auto; min-width: 140px;">Создать</button>
                 </div>
-                <div class="table-container" style="max-width: 500px;">
+                <div class="table-container">
                     <table id="admins-table">
                         <thead>
                             <tr><th>Логин</th><th style="width: 120px;">Действия</th></tr>
@@ -446,7 +603,6 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- Модальное окно -->
     <div id="modal-overlay" class="modal-overlay hidden">
         <div class="modal-box">
             <div class="modal-title" id="modal-title">Подтверждение</div>
