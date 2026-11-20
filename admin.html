@@ -6,7 +6,7 @@
     <title>Панель управления | Академия ТОП</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00c48c;
@@ -41,6 +41,26 @@
         
         h1, h2, h3 { color: var(--heading); font-weight: 700; margin-bottom: 20px; }
         .hidden { display: none !important; }
+        
+        /* Логотип (единый со страницей записи) */
+        .logo-small { 
+            display: inline-flex; 
+            align-items: baseline; 
+            gap: 2px; 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: var(--heading); 
+            letter-spacing: -1px; 
+            text-decoration: none; 
+        }
+        .logo-small .logo-accent { color: var(--accent); }
+        .logo-small .logo-word { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            letter-spacing: 0; 
+            margin-left: 8px; 
+        }
         
         /* Формы */
         .form-group { margin-bottom: 16px; }
@@ -88,14 +108,6 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-        .logo-small {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--heading);
-            letter-spacing: -0.5px;
-            text-decoration: none;
-        }
-        .logo-small span { color: var(--accent); }
         
         .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
         .tab { 
@@ -111,7 +123,7 @@
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
         .tab:hover:not(.active) { color: var(--heading); background: var(--bg); border-radius: 8px 8px 0 0; }
 
-        /* Таблицы */
+        /* Таблицы (десктоп) */
         .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 600px; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
@@ -141,17 +153,27 @@
         .slot-header { 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 16px 20px; background: var(--bg); cursor: pointer; transition: background 0.2s; user-select: none;
+            gap: 12px;
         }
         .slot-header:hover { background: #f1f5f9; }
         .slot-header.expanded { background: var(--primary-light); border-bottom: 1px solid var(--border); }
-        .slot-info { display: flex; flex-direction: column; gap: 4px; }
+        .slot-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
         .slot-title { font-weight: 700; font-size: 1rem; color: var(--heading); }
         .slot-meta { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-        .slot-badge { padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+        .slot-badge { 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            white-space: nowrap; /* ФИКС: текст больше не переносится */
+            flex-shrink: 0;
+        }
         .slot-badge.free { background: var(--primary-light); color: var(--primary); }
         .slot-badge.full { background: #fef2f2; color: var(--danger); }
+        .slot-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
         .slot-content { display: none; padding: 0; background: white; }
         .slot-content.expanded { display: block; }
+        .slot-content .table-container { border: none; border-radius: 0; border-top: 1px solid var(--border); }
         .slot-content table { min-width: auto; }
         .slot-content th { background: #fafafa; }
         .expand-icon { transition: transform 0.2s; font-size: 1.2rem; color: var(--text-muted); font-weight: 300; }
@@ -167,11 +189,29 @@
             display: none;
         }
         .recurring-panel.active { display: block; }
-        .days-selector { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 20px 0; }
+        
+        /* ФИКС: grid вместо flex-wrap — кнопки одинаковые и выровнены влево */
+        .days-selector { 
+            display: grid; 
+            grid-template-columns: repeat(7, minmax(0, 1fr)); 
+            gap: 8px; 
+            margin: 12px 0 20px 0; 
+            max-width: 560px; 
+        }
         .day-checkbox { display: none; }
         .day-label {
-            padding: 10px 16px; background: white; border: 1.5px solid var(--border); border-radius: 8px;
-            cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; user-select: none; color: var(--text-muted);
+            display: block;
+            text-align: center;
+            padding: 10px 8px; 
+            background: white; 
+            border: 1.5px solid var(--border); 
+            border-radius: 8px;
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            transition: all 0.2s; 
+            user-select: none; 
+            color: var(--text-muted);
         }
         .day-checkbox:checked + .day-label { background: var(--primary); color: white; border-color: var(--primary); }
         .day-checkbox:disabled + .day-label { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; border-color: transparent; }
@@ -198,7 +238,7 @@
         .modal-buttons { display: flex; gap: 12px; justify-content: center; }
         .modal-buttons .btn { min-width: 120px; }
 
-        /* Адаптация под мобильные */
+        /* === АДАПТАЦИЯ ПОД ТЕЛЕФОН === */
         @media (max-width: 768px) {
             body { padding: 16px; }
             .card { padding: 20px; }
@@ -207,7 +247,48 @@
             .inline-form .form-group { min-width: 100%; }
             .btn { width: 100%; }
             .modal-buttons { flex-direction: column; }
-            .days-selector { justify-content: center; }
+            .modal-buttons .btn { width: 100%; }
+            .days-selector { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .inline-form .btn { width: 100%; }
+        }
+
+        /* ФИКС: таблицы превращаются в карточки на телефоне */
+        @media (max-width: 640px) {
+            .table-container { border: none; overflow-x: visible; }
+            .slot-content .table-container { border-top: 1px solid var(--border); }
+            .table-container table { min-width: 0; display: block; }
+            .table-container thead { display: none; }
+            .table-container tbody { display: block; }
+            .table-container tr { 
+                display: block; 
+                border: 1px solid var(--border); 
+                border-radius: 10px; 
+                margin: 0 12px 12px 12px; 
+                padding: 4px 14px; 
+                background: var(--card-bg); 
+            }
+            .table-container tr:hover td { background: transparent; }
+            .table-container td { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                padding: 10px 0; 
+                border-bottom: 1px dashed var(--border); 
+                text-align: right; 
+                font-size: 0.9rem;
+            }
+            .table-container tr td:last-child { border-bottom: none; }
+            .table-container td::before { 
+                content: attr(data-label); 
+                font-weight: 600; 
+                color: var(--heading); 
+                text-align: left; 
+                margin-right: 12px; 
+                font-size: 0.8rem; 
+                text-transform: uppercase; 
+                letter-spacing: 0.3px;
+            }
+            .table-container td .btn { width: auto; padding: 8px 16px; }
         }
     </style>
 </head>
@@ -215,7 +296,7 @@
     <div class="container">
         <!-- ЭКРАН ЛОГИНА -->
         <div id="login-screen" class="card" style="max-width: 440px; margin: 80px auto; text-align: center;">
-            <a href="#" class="logo-small" style="display: inline-block; margin-bottom: 24px; font-size: 2rem;">U<span>Z</span> admin</a>
+            <a href="#" class="logo-small" style="margin-bottom: 24px;">Ю<span class="logo-accent">Z</span><span class="logo-word">admin</span></a>
             <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Вход в панель управления</h2>
             <form id="login-form" style="text-align: left;">
                 <div class="form-group">
@@ -234,7 +315,7 @@
         <!-- ЭКРАН ПАНЕЛИ УПРАВЛЕНИЯ -->
         <div id="dashboard-screen" class="hidden">
             <div class="header">
-                <a href="#" class="logo-small">to<span>p</span> admin</a>
+                <a href="#" class="logo-small">Ю<span class="logo-accent">Z</span><span class="logo-word">admin</span></a>
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <span id="user-role-display" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; background: var(--bg); padding: 6px 12px; border-radius: 6px;"></span>
                     <button class="btn btn-danger btn-sm" onclick="logout()">Выйти</button>
@@ -446,7 +527,6 @@
         if (tabName === 'admins') loadAdmins();
     }
 
-    // Модальные окна (без смайликов, чистый текст)
     function showModal({ title = 'Информация', message, buttons = [{ text: 'ОК', type: 'primary', value: true }] }) {
         return new Promise((resolve) => {
             const overlay = document.getElementById('modal-overlay');
@@ -525,7 +605,6 @@
                 const slotDiv = document.createElement('div');
                 slotDiv.className = 'slot-group';
                 
-                // Получаем max из первой записи или дефолт 7
                 const maxSpots = 7; 
                 const isFull = slot.bookings.length >= maxSpots;
                 const badgeClass = isFull ? 'full' : 'free';
@@ -543,27 +622,29 @@
                             <div class="slot-title">${slotName}</div>
                             <div class="slot-meta">${formattedDate}, ${slot.time}</div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="slot-actions">
                             <span class="slot-badge ${badgeClass}">${badgeText}</span>
                             <span class="expand-icon">▶</span>
                         </div>
                     </div>
                     <div class="slot-content">
-                        <table>
-                            <thead><tr><th>Ребёнок</th><th>Родитель</th><th>Телефон</th><th>Время записи</th><th style="width:100px;">Действия</th></tr></thead>
-                            <tbody>
-                                ${slot.bookings.map(b => {
-                                    const createdAt = new Date(b.createdAt + '+03:00').toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                                    return `<tr>
-                                        <td style="font-weight:600;">${b.childName}</td>
-                                        <td>${b.parentName}</td>
-                                        <td><a href="https://web.max.ru/" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">${b.phone} ↗</a></td>
-                                        <td style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
-                                        <td><button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Отменить</button></td>
-                                    </tr>`;
-                                }).join('')}
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Ребёнок</th><th>Родитель</th><th>Телефон</th><th>Время записи</th><th style="width:100px;">Действия</th></tr></thead>
+                                <tbody>
+                                    ${slot.bookings.map(b => {
+                                        const createdAt = new Date(b.createdAt + '+03:00').toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                                        return `<tr>
+                                            <td data-label="Ребёнок" style="font-weight:600;">${b.childName}</td>
+                                            <td data-label="Родитель">${b.parentName}</td>
+                                            <td data-label="Телефон"><a href="https://web.max.ru/" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">${b.phone} ↗</a></td>
+                                            <td data-label="Записан" style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
+                                            <td data-label="Действия"><button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Отменить</button></td>
+                                        </tr>`;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 `;
                 container.appendChild(slotDiv);
@@ -642,11 +723,11 @@
                 const displayText = (s.display && s.display !== "Отработка") ? s.display : '<span style="color:var(--text-muted)">Отработка</span>';
                 
                 tbody.innerHTML += `<tr>
-                    <td style="font-weight:600;">${s.date}</td>
-                    <td>${s.time || '—'}</td>
-                    <td>${displayText}</td>
-                    <td><span class="slot-badge ${isFull ? 'full' : 'free'}">${s.booked} / ${s.max}</span></td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}', ${s.booked})">Удалить</button></td>
+                    <td data-label="Дата" style="font-weight:600;">${s.date}</td>
+                    <td data-label="Время">${s.time || '—'}</td>
+                    <td data-label="Текст">${displayText}</td>
+                    <td data-label="Записано"><span class="slot-badge ${isFull ? 'full' : 'free'}">${s.booked} / ${s.max}</span></td>
+                    <td data-label="Действия"><button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}', ${s.booked})">Удалить</button></td>
                 </tr>`;
             });
         } catch (e) { showToast('Ошибка загрузки расписания', 'error'); }
@@ -694,8 +775,8 @@
             tbody.innerHTML = '';
             data.forEach(a => {
                 tbody.innerHTML += `<tr>
-                    <td style="font-weight:600;">${a.login}</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteAdmin('${a.login}')">Удалить</button></td>
+                    <td data-label="Логин" style="font-weight:600;">${a.login}</td>
+                    <td data-label="Действия"><button class="btn btn-danger btn-sm" onclick="deleteAdmin('${a.login}')">Удалить</button></td>
                 </tr>`;
             });
         } catch (e) { if(e.message !== 'Unauthorized') showToast(e.message, 'error'); }
