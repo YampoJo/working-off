@@ -502,7 +502,7 @@
     function showDashboard() {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('dashboard-screen').classList.remove('hidden');
-        document.getElementById('user-role-display').textContent = `Роль: ${userRole === 'master' ? 'Мастер' : 'Администратор'}`;
+        document.getElementById('user-role-display').textContent = `Роль: ${userRole === 'master' ? 'Директор' : 'МУП'}`;
         if (userRole === 'master') document.getElementById('tab-admins').classList.remove('hidden');
         loadBookings();
     }
