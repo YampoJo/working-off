@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Запись на отработку занятий | Академия ТОП</title>
+    <title>Запись на отработку | Академия ТОП Юго-Западная</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1d4ed8;
-            --primary-hover: #1e40af;
-            --bg: #f8fafc;
+            /* Фирменная палитра Академии ТОП */
+            --primary: #00c48c;
+            --primary-hover: #00a876;
+            --primary-light: #e6faf4;
+            --accent: #ff6b00;
+            --heading: #1e1b4b;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
             --card-bg: #ffffff;
-            --text: #0f172a;
+            --text: #334155;
             --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #059669;
+            --border: #e5e7eb;
+            --success: #00c48c;
             --error: #dc2626;
             --disabled: #cbd5e1;
         }
@@ -32,7 +37,7 @@
             background-color: var(--bg); 
             color: var(--text); 
             line-height: 1.6; 
-            padding: 24px; 
+            padding: 20px; 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
@@ -40,31 +45,33 @@
         }
         
         .container { 
-            max-width: 960px; 
+            max-width: 1080px; 
             width: 100%; 
             margin-top: 20px; 
         }
         
         h1 { 
-            font-size: 1.75rem; 
-            font-weight: 700;
+            font-size: 2rem; 
+            font-weight: 800;
             margin-bottom: 8px; 
             text-align: center; 
-            color: var(--text);
+            color: var(--heading);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
         }
 
         .subtitle { 
             text-align: center; 
             color: var(--text-muted); 
             margin-bottom: 32px; 
-            font-size: 1rem; 
+            font-size: 1.05rem; 
         }
 
         .card { 
             background: var(--card-bg); 
-            border-radius: 12px; 
+            border-radius: 16px; 
             padding: 32px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.05); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); 
             margin-bottom: 24px; 
             border: 1px solid var(--border); 
         }
@@ -72,50 +79,76 @@
         /* === ШАПКА ФИЛИАЛА === */
         .branch-header {
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 32px;
             margin-bottom: 32px;
             border: 1px solid var(--border);
-            border-top: 4px solid var(--primary);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
         }
-        .header-top { 
-            text-align: center; 
-            margin-bottom: 24px; 
+        .header-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
             padding-bottom: 24px;
-            border-bottom: 1px solid var(--border); 
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
         }
-        .header-top h2 { 
-            font-size: 1.5rem; 
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--heading);
+            letter-spacing: -1px;
+            text-decoration: none;
+        }
+        .logo-accent {
+            color: var(--accent);
+            position: relative;
+        }
+        .logo-suffix {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0;
+            text-transform: lowercase;
+        }
+        .branch-title {
+            font-size: 1.1rem;
             font-weight: 700;
-            color: var(--primary); 
-            margin-bottom: 8px; 
+            color: var(--heading);
         }
         .header-address { 
             color: var(--text-muted); 
             font-size: 0.95rem; 
-            line-height: 1.5; 
+            line-height: 1.5;
+            margin-bottom: 24px;
         }
         .header-contacts { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
-            gap: 24px; 
+            gap: 20px; 
             margin-bottom: 24px; 
         }
-        @media (max-width: 600px) { 
-            .header-contacts { grid-template-columns: 1fr; gap: 16px; } 
+        @media (max-width: 640px) { 
+            .header-contacts { grid-template-columns: 1fr; gap: 12px; } 
+            .header-brand { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .branch-header { padding: 24px 20px; }
         }
         .contact-block { 
-            background: #f8fafc; 
+            background: var(--bg-alt); 
             padding: 20px; 
-            border-radius: 8px; 
+            border-radius: 12px; 
             border: 1px solid var(--border);
         }
         .contact-block h3 { 
             font-size: 1rem; 
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 12px; 
-            color: var(--text); 
+            color: var(--heading); 
         }
         .contact-block p { 
             margin: 6px 0; 
@@ -123,33 +156,34 @@
             color: var(--text-muted); 
         }
         .contact-block a { 
-            color: var(--primary); 
+            color: var(--heading); 
             text-decoration: none; 
-            font-weight: 500; 
+            font-weight: 600; 
             transition: color 0.2s;
         }
         .contact-block a:hover { 
-            color: var(--primary-hover);
-            text-decoration: underline; 
+            color: var(--primary);
         }
         .header-socials { 
             display: flex; 
-            justify-content: center; 
-            gap: 16px; 
+            justify-content: flex-start;
+            gap: 12px; 
+            flex-wrap: wrap;
         }
         .social-btn { 
             padding: 12px 24px; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             text-decoration: none; 
-            font-weight: 600; 
+            font-weight: 700; 
             font-size: 0.95rem; 
             color: white;
             transition: all 0.2s; 
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: 0.3px;
         }
-        .social-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .social-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .max-btn { background: #0077FF; } 
         .tg-btn { background: #24A1DE; } 
 
@@ -157,85 +191,110 @@
         .calendar-wrapper {
             margin-bottom: 32px;
         }
+        .calendar-wrapper:last-child {
+            margin-bottom: 0;
+        }
         .week-header {
             font-size: 1rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 12px;
-            padding-left: 4px;
+            font-weight: 700;
+            color: var(--heading);
+            margin-bottom: 14px;
+            padding-left: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .week-header::before {
             content: '';
             display: block;
             width: 4px;
-            height: 18px;
+            height: 20px;
             background: var(--primary);
             border-radius: 2px;
         }
+
+        /* КЛЮЧЕВОЙ ФИКС: minmax(0, 1fr) не дает колонкам расширяться */
         .dates-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: 8px;
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .dates-grid {
                 display: flex;
                 overflow-x: auto;
-                gap: 12px;
+                gap: 10px;
                 padding-bottom: 12px;
                 scrollbar-width: thin;
+                scrollbar-color: var(--primary) var(--bg-alt);
             }
+            .dates-grid::-webkit-scrollbar { height: 6px; }
+            .dates-grid::-webkit-scrollbar-track { background: var(--bg-alt); border-radius: 3px; }
+            .dates-grid::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
         }
 
         .day-name {
             text-align: center;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             color: var(--text-muted);
             padding: 8px 0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
         .day-name.weekend {
-            color: var(--error);
+            color: var(--accent);
         }
 
         .day-cell {
-            min-height: 110px;
-            background: #f8fafc;
+            min-height: 130px;
+            background: var(--bg-alt);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 8px;
             display: flex;
             flex-direction: column;
             gap: 6px;
             transition: background 0.2s;
+            min-width: 0; /* Критично для grid, чтобы не расширялась */
         }
         .day-cell.weekend {
-            background: #fef2f2;
-            border-color: #fecaca;
+            background: #fff8f0;
+            border-color: #fed7aa;
         }
         .day-cell.empty {
             background: #f1f5f9;
             border-style: dashed;
-            opacity: 0.6;
+            opacity: 0.5;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .day-cell {
-                min-width: 130px;
+                min-width: 140px;
                 flex-shrink: 0;
-                min-height: 100px;
+                min-height: 120px;
+            }
+            .day-name {
+                min-width: 140px;
+            }
+        }
+        @media (max-width: 480px) {
+            .day-cell {
+                min-width: 120px;
+                min-height: 110px;
+                padding: 6px;
+            }
+            .day-name {
+                min-width: 120px;
+                font-size: 0.7rem;
             }
         }
 
         .date-btn {
             background: white;
             border: 1.5px solid var(--primary);
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 8px 6px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -245,53 +304,59 @@
             flex-direction: column;
             justify-content: center;
             gap: 4px;
+            min-width: 0; /* Критично для grid */
+            width: 100%;
         }
         .date-btn:hover:not(:disabled) {
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 196, 140, 0.3);
         }
         .date-btn:hover:not(:disabled) .slot-datetime,
         .date-btn:hover:not(:disabled) .slot-status {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
         }
         .date-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary-hover);
-            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 196, 140, 0.35);
         }
         .date-btn.active .slot-datetime,
         .date-btn.active .slot-status {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
         }
         .date-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.55;
             cursor: not-allowed;
             background: #e2e8f0;
             border-color: #cbd5e1;
             color: var(--text-muted);
         }
 
+        /* ФИКС: перенос длинных названий на след. строку */
         .slot-name {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.8rem;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.25;
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            hyphens: auto;
         }
         .slot-datetime {
             font-size: 0.75rem;
             color: var(--text-muted);
-            font-weight: 500;
+            font-weight: 600;
+            flex-shrink: 0;
         }
         .slot-status {
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--success);
             margin-top: 2px;
+            flex-shrink: 0;
         }
         .slot-status.full {
             color: var(--error);
@@ -299,15 +364,26 @@
 
         .empty-calendar {
             text-align: center;
-            padding: 48px;
+            padding: 48px 24px;
             color: var(--text-muted);
-            background: #f8fafc;
+            background: var(--bg-alt);
             border-radius: 12px;
             border: 1px dashed var(--border);
             font-size: 1.05rem;
         }
 
-        /* === ФОРМА === */
+        /* === ФОРМА ЗАПИСИ (узкая, по центру) === */
+        #step-form {
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #step-success {
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .form-group { 
             margin-bottom: 20px; 
         }
@@ -316,29 +392,31 @@
             font-size: 0.9rem; 
             font-weight: 600; 
             margin-bottom: 8px; 
-            color: var(--text); 
+            color: var(--heading); 
         }
         input[type="text"], input[type="tel"] {
             width: 100%; 
             padding: 14px 16px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px;
+            border: 1.5px solid var(--border); 
+            border-radius: 10px;
             font-size: 1rem; 
             transition: all 0.2s; 
             outline: none;
             background: #ffffff;
+            color: var(--text);
         }
         input:focus { 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); 
+            box-shadow: 0 0 0 3px rgba(0, 196, 140, 0.12); 
         }
+        input::placeholder { color: #94a3b8; }
 
         .pdn-checkbox { 
             display: flex; 
             align-items: flex-start; 
             gap: 12px; 
             margin: 24px 0; 
-            font-size: 0.9rem; 
+            font-size: 0.88rem; 
             color: var(--text-muted); 
             line-height: 1.5;
         }
@@ -353,7 +431,7 @@
         .pdn-checkbox a { 
             color: var(--primary); 
             text-decoration: none; 
-            font-weight: 500;
+            font-weight: 600;
         }
         .pdn-checkbox a:hover { 
             text-decoration: underline; 
@@ -365,16 +443,18 @@
             background: var(--primary); 
             color: white; 
             border: none;
-            border-radius: 8px; 
+            border-radius: 10px; 
             font-size: 1.05rem; 
-            font-weight: 600; 
+            font-weight: 700; 
             cursor: pointer; 
             transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .submit-btn:hover:not(:disabled) { 
             background: var(--primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+            box-shadow: 0 6px 16px rgba(0, 196, 140, 0.35);
         }
         .submit-btn:disabled { 
             background: var(--disabled); 
@@ -387,14 +467,14 @@
 
         .message { 
             padding: 16px; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             text-align: center; 
-            font-weight: 500; 
+            font-weight: 600; 
             margin-top: 20px;
             font-size: 0.95rem;
         }
         .message.success { 
-            background: #ecfdf5; 
+            background: var(--primary-light); 
             color: #065f46;
             border: 1px solid #a7f3d0;
         }
@@ -414,11 +494,11 @@
         .selected-date-display { 
             margin-bottom: 24px; 
             text-align: center; 
-            padding: 16px;
-            background: #eff6ff;
-            border-radius: 8px;
-            border: 1px solid #bfdbfe;
-            color: var(--primary);
+            padding: 20px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            border: 1px solid #a7f3d0;
+            color: var(--heading);
         }
 
         .back-link { 
@@ -428,21 +508,38 @@
             margin-top: 20px; 
             color: var(--text-muted); 
             font-size: 0.95rem; 
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer; 
             text-decoration: none; 
             transition: color 0.2s;
         }
         .back-link:hover { color: var(--primary); }
+
+        /* === МОБИЛЬНЫЕ ДОРАБОТКИ === */
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .container { margin-top: 12px; }
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.95rem; margin-bottom: 24px; }
+            .card { padding: 20px 16px; border-radius: 12px; }
+            #step-form, #step-success { padding: 20px 16px; }
+            .logo { font-size: 1.6rem; }
+            .branch-title { font-size: 1rem; }
+            .social-btn { padding: 10px 18px; font-size: 0.88rem; }
+            .week-header { font-size: 0.95rem; margin-bottom: 10px; }
+            .submit-btn { padding: 14px; font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="branch-header">
-            <div class="header-top">
-                <h2>Академия ТОП Юго-Западная</h2>
-                <p class="header-address">г. Москва, ул. Покрышкина, д. 8, корп. 1 (офис 7, 2 этаж; рядом с м. «Юго-Западная» и «Озёрная»)</p>
+            <div class="header-brand">
+                <a href="#" class="logo">to<span class="logo-accent">p</span><span class="logo-suffix">школа</span></a>
+                <div class="branch-title">Академия ТОП Юго-Западная</div>
             </div>
+
+            <p class="header-address">г. Москва, ул. Покрышкина, д. 8, корп. 1 (офис 7, 2 этаж; рядом с м. «Юго-Западная» и «Озёрная»)</p>
             
             <div class="header-contacts">
                 <div class="contact-block">
@@ -460,12 +557,8 @@
             </div>
 
             <div class="header-socials">
-                <a href="https://max.ru/u/f9LHodD0cOK1iath7xqzRuKD0rfuIqmfODyrvqlW5S5kcExY1nF_te9qJTg" target="_blank" class="social-btn max-btn">
-                    MAX
-                </a>
-                <a href="https://t.me/+79891046620" target="_blank" class="social-btn tg-btn">
-                    Telegram
-                </a>
+                <a href="https://max.ru/u/f9LHodD0cOK1iath7xqzRuKD0rfuIqmfODyrvqlW5S5kcExY1nF_te9qJTg" target="_blank" class="social-btn max-btn">MAX</a>
+                <a href="https://t.me/+79891046620" target="_blank" class="social-btn tg-btn">Telegram</a>
             </div>
         </header>
 
@@ -517,7 +610,7 @@
             <div class="message success">Вы успешно записаны!</div>
             <p style="text-align:center; margin-top:16px; color:var(--text-muted); font-size: 1.05rem;">
                 Мы свяжемся с вами для подтверждения.<br>
-                <a class="back-link" id="new-booking" style="margin-top: 16px; justify-content: center;">Записать ещё одного ребёнка →</a>
+                <a class="back-link" id="new-booking" style="margin-top: 16px; justify-content: center; width: 100%;">Записать ещё одного ребёнка →</a>
             </p>
         </div>
     </div>
@@ -663,7 +756,7 @@
             
             const weekTitle = document.createElement('div');
             weekTitle.className = 'week-header';
-            weekTitle.textContent = `Неделя: ${formatDateShort(monday)} — ${formatDateShort(sunday)} ${monday.getFullYear()}`;
+            weekTitle.textContent = `${formatDateShort(monday)} — ${formatDateShort(sunday)} ${monday.getFullYear()}`;
             wrapper.appendChild(weekTitle);
 
             const grid = document.createElement('div');
@@ -701,9 +794,8 @@
 
                         const slotName = (slot.display && slot.display !== "Отработка") ? slot.display : "Отработка";
 
-                        // ИЗМЕНЕНО: теперь показываем booked/max (например, 0/7 или 5/7)
                         btn.innerHTML = `
-                            <div class="slot-name" title="${slotName}">${slotName}</div>
+                            <div class="slot-name">${slotName}</div>
                             <div class="slot-datetime">${slot.time}</div>
                             <div class="slot-status ${isFull ? 'full' : ''}">
                                 ${isFull ? 'Мест нет' : `${slot.booked}/${slot.max}`}
@@ -736,8 +828,8 @@
         selectedSlot = slot;
         
         els.selectedDateText.innerHTML = `
-            <div style="font-size: 1.15rem; font-weight: 700; margin-bottom: 4px;">${slotName}</div>
-            <div style="font-size: 1rem; font-weight: 500;">${datetimeStr}</div>
+            <div style="font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: var(--heading);">${slotName}</div>
+            <div style="font-size: 1rem; font-weight: 600; color: var(--primary);">${datetimeStr}</div>
         `;
         
         els.form.reset();
