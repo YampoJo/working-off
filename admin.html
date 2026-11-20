@@ -3,246 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель управления</title>
+    <title>Панель управления | Академия ТОП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5; --primary-hover: #4338ca;
-            --bg: #f8fafc; --card-bg: #ffffff;
-            --text: #1e293b; --text-muted: #64748b;
-            --border: #e2e8f0; --success: #10b981; --error: #ef4444; --danger: #dc2626;
+            --primary: #00c48c;
+            --primary-hover: #00a876;
+            --primary-light: #e6faf4;
+            --accent: #ff6b00;
+            --heading: #1e1b4b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --text-muted: #64748b;
+            --border: #e5e7eb;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; }
-        .container { max-width: 900px; margin: 0 auto; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        body { background-color: var(--bg); color: var(--text); padding: 24px; min-height: 100vh; }
+        
+        .container { max-width: 1080px; margin: 0 auto; }
         
         /* Карточки и общие стили */
-        .card { background: var(--card-bg); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 20px; }
-        h1, h2, h3 { margin-bottom: 16px; }
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            padding: 32px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); 
+            border: 1px solid var(--border); 
+            margin-bottom: 24px; 
+        }
+        
+        h1, h2, h3 { color: var(--heading); font-weight: 700; margin-bottom: 20px; }
         .hidden { display: none !important; }
         
         /* Формы */
         .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
-        input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--heading); }
+        input { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 1.5px solid var(--border); 
+            border-radius: 10px; 
+            font-size: 1rem; 
+            outline: none; 
+            transition: all 0.2s;
+            background: #ffffff;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 196, 140, 0.12); }
+        input::placeholder { color: #94a3b8; }
         
         /* Кнопки */
-        .btn { padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #b91c1c; }
-        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
-        .btn:disabled { background: var(--text-muted); cursor: not-allowed; }
-
-        /* Навигация */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
-        .tab { padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; color: var(--text-muted); }
-        .tab.active { background: #eef2ff; color: var(--primary); }
-        .tab:hover:not(.active) { background: #f1f5f9; }
-
-        /* Таблицы */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-weight: 600; color: var(--text-muted); background: #f8fafc; }
-        tr:hover { background: #f8fafc; }
-
-        /* Уведомления */
-        .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .toast.show { opacity: 1; }
-        .toast.success { background: var(--success); }
-        .toast.error { background: var(--error); }
-        
-        .inline-form { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
-        .inline-form .form-group { margin-bottom: 0; flex: 1; min-width: 150px; }
-        /* Аккордеон для записей */
-        .slot-group { 
-            margin-bottom: 12px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            overflow: hidden;
+        .btn { 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 0.95rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        .slot-header { 
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 196, 140, 0.3); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: var(--danger-hover); transform: translateY(-1px); }
+        .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+        .btn-sm { padding: 8px 14px; font-size: 0.85rem; text-transform: none; letter-spacing: 0; }
+        .btn:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Навигация и шапка */
+        .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 14px 16px; 
-            background: #f8fafc; 
-            cursor: pointer; 
-            transition: background 0.2s;
-            user-select: none;
-        }
-        .slot-header:hover { 
-            background: #f1f5f9; 
-        }
-        .slot-header.expanded { 
-            background: #eef2ff; 
-            border-bottom: 1px solid var(--border);
-        }
-        .slot-info { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 4px;
-        }
-        .slot-title { 
-            font-weight: 600; 
-            font-size: 1rem; 
-            color: var(--text);
-        }
-        .slot-meta { 
-            font-size: 0.85rem; 
-            color: var(--text-muted);
-        }
-        .slot-badge { 
-            padding: 4px 12px; 
-            border-radius: 12px; 
-            font-size: 0.85rem; 
-            font-weight: 600;
-        }
-        .slot-badge.free { 
-            background: #d1fae5; 
-            color: #065f46; 
-        }
-        .slot-badge.full { 
-            background: #fee2e2; 
-            color: #991b1b; 
-        }
-        .slot-content { 
-            display: none; 
-            padding: 0;
-        }
-        .slot-content.expanded { 
-            display: block; 
-        }
-        .slot-content table { 
-            margin: 0;
-        }
-        .slot-content th { 
-            background: #fafafa;
-        }
-        .expand-icon { 
-            transition: transform 0.2s;
-            font-size: 1.2rem;
-            color: var(--text-muted);
-        }
-        .expand-icon.rotated { 
-            transform: rotate(90deg);
-        }
-        /* Стили для пакетного создания расписания */
-        .recurring-panel {
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-            display: none; /* Скрыто по умолчанию */
-        }
-        .recurring-panel.active {
-            display: block;
-        }
-        .days-selector {
-            display: flex;
-            gap: 8px;
+            margin-bottom: 24px; 
             flex-wrap: wrap;
-            margin: 8px 0 16px 0;
+            gap: 16px;
         }
-        .day-checkbox {
+        .logo-small {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--heading);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+        .logo-small span { color: var(--accent); }
+        
+        .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+        .tab { 
+            padding: 12px 20px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            border-bottom: 2px solid transparent; 
+            margin-bottom: -2px; 
+            transition: all 0.2s; 
+            white-space: nowrap;
+        }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab:hover:not(.active) { color: var(--heading); background: var(--bg); border-radius: 8px 8px 0 0; }
+
+        /* Таблицы */
+        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 600px; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 700; color: var(--heading); background: var(--bg); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--primary-light); }
+
+        /* Уведомления */
+        .toast { 
+            position: fixed; bottom: 24px; right: 24px; 
+            padding: 14px 24px; border-radius: 10px; 
+            color: white; font-weight: 600; 
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; 
+            pointer-events: none; z-index: 2000;
+            transform: translateY(20px);
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: var(--primary); }
+        .toast.error { background: var(--danger); }
+        
+        .inline-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+        .inline-form .form-group { margin-bottom: 0; flex: 1; min-width: 140px; }
+
+        /* Аккордеон для записей */
+        .slot-group { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: box-shadow 0.2s; }
+        .slot-group:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .slot-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 16px 20px; background: var(--bg); cursor: pointer; transition: background 0.2s; user-select: none;
+        }
+        .slot-header:hover { background: #f1f5f9; }
+        .slot-header.expanded { background: var(--primary-light); border-bottom: 1px solid var(--border); }
+        .slot-info { display: flex; flex-direction: column; gap: 4px; }
+        .slot-title { font-weight: 700; font-size: 1rem; color: var(--heading); }
+        .slot-meta { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .slot-badge { padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+        .slot-badge.free { background: var(--primary-light); color: var(--primary); }
+        .slot-badge.full { background: #fef2f2; color: var(--danger); }
+        .slot-content { display: none; padding: 0; background: white; }
+        .slot-content.expanded { display: block; }
+        .slot-content table { min-width: auto; }
+        .slot-content th { background: #fafafa; }
+        .expand-icon { transition: transform 0.2s; font-size: 1.2rem; color: var(--text-muted); font-weight: 300; }
+        .expand-icon.rotated { transform: rotate(90deg); color: var(--primary); }
+
+        /* Пакетное создание */
+        .recurring-panel {
+            background: var(--primary-light);
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
             display: none;
         }
+        .recurring-panel.active { display: block; }
+        .days-selector { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 20px 0; }
+        .day-checkbox { display: none; }
         .day-label {
-            padding: 8px 12px;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            user-select: none;
+            padding: 10px 16px; background: white; border: 1.5px solid var(--border); border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; user-select: none; color: var(--text-muted);
         }
-        .day-checkbox:checked + .day-label {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            font-weight: 600;
-        }
-        .day-checkbox:disabled + .day-label {
-            background: #e2e8f0;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
+        .day-checkbox:checked + .day-label { background: var(--primary); color: white; border-color: var(--primary); }
+        .day-checkbox:disabled + .day-label { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; border-color: transparent; }
 
         /* Модальное окно */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.2s ease;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; animation: fadeIn 0.2s ease;
         }
         .modal-overlay.hidden { display: none; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-20px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
         .modal-box {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 420px;
-            width: 90%;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            text-align: center;
-            animation: slideIn 0.25s ease;
+            background: white; border-radius: 16px; padding: 32px;
+            max-width: 440px; width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            text-align: center; animation: slideIn 0.25s ease;
         }
-        .modal-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-        }
-        .modal-message {
-            font-size: 1rem;
-            color: var(--text);
-            line-height: 1.5;
-            margin-bottom: 20px;
-            white-space: pre-line;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        .modal-buttons .btn { min-width: 100px; }
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--heading); margin-bottom: 12px; }
+        .modal-message { font-size: 1rem; color: var(--text); line-height: 1.6; margin-bottom: 24px; white-space: pre-line; }
+        .modal-buttons { display: flex; gap: 12px; justify-content: center; }
+        .modal-buttons .btn { min-width: 120px; }
 
+        /* Адаптация под мобильные */
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .card { padding: 20px; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .inline-form { flex-direction: column; align-items: stretch; }
+            .inline-form .form-group { min-width: 100%; }
+            .btn { width: 100%; }
+            .modal-buttons { flex-direction: column; }
+            .days-selector { justify-content: center; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- ЭКРАН ЛОГИНА -->
-        <div id="login-screen" class="card" style="max-width: 400px; margin: 100px auto;">
-            <h2 style="text-align: center;">🔐 Вход в панель управления</h2>
-            <form id="login-form">
+        <div id="login-screen" class="card" style="max-width: 440px; margin: 80px auto; text-align: center;">
+            <a href="#" class="logo-small" style="display: inline-block; margin-bottom: 24px; font-size: 2rem;">to<span>p</span> admin</a>
+            <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Вход в панель управления</h2>
+            <form id="login-form" style="text-align: left;">
                 <div class="form-group">
                     <label>Логин</label>
-                    <input type="text" id="login-input" required>
+                    <input type="text" id="login-input" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label>Пароль</label>
-                    <input type="password" id="password-input" required>
+                    <input type="password" id="password-input" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Войти</button>
-                <div id="login-error" style="color: var(--error); text-align: center; margin-top: 12px; font-size: 0.9rem;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Войти в систему</button>
+                <div id="login-error" style="color: var(--danger); text-align: center; margin-top: 16px; font-size: 0.9rem; font-weight: 600;"></div>
             </form>
         </div>
 
         <!-- ЭКРАН ПАНЕЛИ УПРАВЛЕНИЯ -->
         <div id="dashboard-screen" class="hidden">
             <div class="header">
-                <h2>Панель управления</h2>
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span id="user-role-display" style="font-size: 0.9rem; color: var(--text-muted);"></span>
+                <a href="#" class="logo-small">to<span>p</span> admin</a>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span id="user-role-display" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; background: var(--bg); padding: 6px 12px; border-radius: 6px;"></span>
                     <button class="btn btn-danger btn-sm" onclick="logout()">Выйти</button>
                 </div>
             </div>
@@ -250,35 +244,34 @@
             <div class="tabs">
                 <div class="tab active" onclick="switchTab('bookings')">Записи</div>
                 <div class="tab" onclick="switchTab('schedule')">Расписание</div>
-                <div class="tab hidden" id="tab-admins" onclick="switchTab('admins')">👑 Админы</div>
+                <div class="tab hidden" id="tab-admins" onclick="switchTab('admins')">Администраторы</div>
             </div>
 
-           <!-- Вкладка: Записи -->
+            <!-- Вкладка: Записи -->
             <div id="view-bookings" class="card hidden">
                 <h3>Записи на отработки</h3>
                 <div id="bookings-container"></div>
-                <button class="btn btn-primary btn-sm" onclick="loadBookings()" style="margin-top: 16px;">Обновить</button>
+                <button class="btn btn-primary btn-sm" onclick="loadBookings()" style="margin-top: 20px; width: auto;">Обновить список</button>
             </div>
 
             <!-- Вкладка: Расписание -->
             <div id="view-schedule" class="card hidden">
                 <h3>Управление слотами</h3>
                 
-                <!-- Переключатель режима -->
-                <div style="margin-bottom: 16px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
-                        <input type="checkbox" id="toggle-recurring" onchange="toggleRecurringMode()">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; color: var(--heading);">
+                        <input type="checkbox" id="toggle-recurring" onchange="toggleRecurringMode()" style="width: 20px; height: 20px; accent-color: var(--primary);">
                         Создать расписание на несколько недель (пакетно)
                     </label>
                 </div>
 
-                <!-- Обычная форма (для разового слота) -->
-                <div id="single-slot-form" class="inline-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                <!-- Обычная форма -->
+                <div id="single-slot-form" class="inline-form" style="margin-bottom: 24px; padding: 20px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border);">
                     <div class="form-group">
                         <label>Дата</label>
                         <input type="date" id="new-slot-date">
                     </div>
-                    <div class="form-group" style="max-width: 120px;">
+                    <div class="form-group" style="max-width: 130px;">
                         <label>Время</label>
                         <input type="time" id="new-slot-time">
                     </div>
@@ -286,27 +279,27 @@
                         <label>Доп. текст</label>
                         <input type="text" id="new-slot-display" placeholder="Оставьте пустым для 'Отработка'">
                     </div>
-                    <div class="form-group" style="max-width: 80px;">
+                    <div class="form-group" style="max-width: 90px;">
                         <label>Мест</label>
                         <input type="number" id="new-slot-max" value="7" min="1">
                     </div>
-                    <button class="btn btn-primary" onclick="addSlot()" style="height: 42px;">Добавить</button>
+                    <button class="btn btn-primary" onclick="addSlot()" style="height: 48px; width: auto; min-width: 140px;">Добавить</button>
                 </div>
 
-                <!-- Пакетная форма (для расписания на недели) -->
+                <!-- Пакетная форма -->
                 <div id="recurring-slot-form" class="recurring-panel">
-                    <div class="inline-form" style="margin-bottom: 12px;">
+                    <div class="inline-form" style="margin-bottom: 16px;">
                         <div class="form-group">
                             <label>Начать с недели, содержащей дату:</label>
                             <input type="date" id="recur-start-date">
                         </div>
-                        <div class="form-group" style="max-width: 100px;">
+                        <div class="form-group" style="max-width: 130px;">
                             <label>Кол-во недель:</label>
                             <input type="number" id="recur-weeks" value="4" min="1" max="52">
                         </div>
                     </div>
                     
-                    <label style="font-weight: 600; font-size: 0.9rem;">Выберите дни недели:</label>
+                    <label style="font-weight: 700; font-size: 0.9rem; color: var(--heading);">Выберите дни недели:</label>
                     <div class="days-selector">
                         <label><input type="checkbox" class="day-checkbox" value="1" disabled><span class="day-label">Пн</span></label>
                         <label><input type="checkbox" class="day-checkbox" value="2" disabled><span class="day-label">Вт</span></label>
@@ -318,36 +311,36 @@
                     </div>
 
                     <div class="inline-form">
-                        <div class="form-group" style="max-width: 120px;">
-                            <label>Время для всех дней:</label>
+                        <div class="form-group" style="max-width: 130px;">
+                            <label>Время для всех:</label>
                             <input type="time" id="recur-time">
                         </div>
                         <div class="form-group">
                             <label>Доп. текст (общий):</label>
                             <input type="text" id="recur-display" placeholder="Оставьте пустым для 'Отработка'">
                         </div>
-                        <div class="form-group" style="max-width: 80px;">
+                        <div class="form-group" style="max-width: 90px;">
                             <label>Мест:</label>
                             <input type="number" id="recur-max" value="7" min="1">
                         </div>
-                        <button class="btn btn-primary" onclick="addBulkSlots()" style="height: 42px;">Создать расписание</button>
+                        <button class="btn btn-primary" onclick="addBulkSlots()" style="height: 48px; width: auto; min-width: 180px;">Создать расписание</button>
                     </div>
                 </div>
 
                 <div class="table-container">
                     <table id="schedule-table">
                         <thead>
-                            <tr><th>Дата</th><th>Время</th><th>Текст</th><th>Записано</th><th>Действия</th></tr>
+                            <tr><th>Дата</th><th>Время</th><th>Текст</th><th>Записано</th><th style="width: 120px;">Действия</th></tr>
                         </thead>
                         <tbody id="schedule-tbody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Вкладка: Админы (только для master) -->
+            <!-- Вкладка: Админы -->
             <div id="view-admins" class="card hidden">
                 <h3>Управление администраторами</h3>
-                <div class="inline-form" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                <div class="inline-form" style="margin-bottom: 24px; padding: 20px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border);">
                     <div class="form-group">
                         <label>Новый логин</label>
                         <input type="text" id="new-admin-login" required>
@@ -356,12 +349,12 @@
                         <label>Пароль (мин. 4 символа)</label>
                         <input type="password" id="new-admin-pass" required>
                     </div>
-                    <button class="btn btn-primary" onclick="createAdmin()" style="height: 42px;">Создать</button>
+                    <button class="btn btn-primary" onclick="createAdmin()" style="height: 48px; width: auto; min-width: 140px;">Создать</button>
                 </div>
-                <div class="table-container">
+                <div class="table-container" style="max-width: 500px;">
                     <table id="admins-table">
                         <thead>
-                            <tr><th>Логин</th><th>Действия</th></tr>
+                            <tr><th>Логин</th><th style="width: 120px;">Действия</th></tr>
                         </thead>
                         <tbody id="admins-tbody"></tbody>
                     </table>
@@ -372,10 +365,10 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- Универсальное модальное окно -->
+    <!-- Модальное окно -->
     <div id="modal-overlay" class="modal-overlay hidden">
         <div class="modal-box">
-            <div class="modal-icon" id="modal-icon">⚠️</div>
+            <div class="modal-title" id="modal-title">Подтверждение</div>
             <div class="modal-message" id="modal-message"></div>
             <div class="modal-buttons" id="modal-buttons">
                 <button class="btn btn-primary" id="modal-ok">ОК</button>
@@ -384,20 +377,13 @@
     </div>
 
 <script>
-    // ⚙️ КОНФИГУРАЦИЯ
     const API_URL = 'https://functions.yandexcloud.net/d4e1m42j6h2ei9q4c1gj';
-    
-    // Состояние
     let authToken = localStorage.getItem('makeup_admin_token');
     let userRole = localStorage.getItem('makeup_admin_role');
 
-    // === ИНИЦИАЛИЗАЦИЯ ===
     document.addEventListener('DOMContentLoaded', () => {
-        if (authToken && userRole) {
-            showDashboard();
-        } else {
-            showLogin();
-        }
+        if (authToken && userRole) showDashboard();
+        else showLogin();
     });
 
     document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -423,11 +409,10 @@
             document.getElementById('login-error').textContent = err.message || 'Ошибка входа';
         } finally {
             btn.disabled = false;
-            btn.textContent = 'Войти';
+            btn.textContent = 'Войти в систему';
         }
     });
 
-    // === НАВИГАЦИЯ И ОТОБРАЖЕНИЕ ===
     function showLogin() {
         document.getElementById('login-screen').classList.remove('hidden');
         document.getElementById('dashboard-screen').classList.add('hidden');
@@ -436,12 +421,8 @@
     function showDashboard() {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('dashboard-screen').classList.remove('hidden');
-        document.getElementById('user-role-display').textContent = `Роль: ${userRole === 'master' ? 'Мастер' : 'Админ'}`;
-        
-        if (userRole === 'master') {
-            document.getElementById('tab-admins').classList.remove('hidden');
-        }
-        
+        document.getElementById('user-role-display').textContent = `Роль: ${userRole === 'master' ? 'Мастер' : 'Администратор'}`;
+        if (userRole === 'master') document.getElementById('tab-admins').classList.remove('hidden');
         loadBookings();
     }
 
@@ -458,51 +439,41 @@
     function switchTab(tabName) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
-        
         event.target.classList.add('active');
         document.getElementById(`view-${tabName}`).classList.remove('hidden');
-        
         if (tabName === 'bookings') loadBookings();
         if (tabName === 'schedule') loadSchedule();
         if (tabName === 'admins') loadAdmins();
     }
 
-    // Универсальная система модальных окон
-    function showModal({ message, icon = '⚠️', buttons = [{ text: 'ОК', type: 'primary', value: true }] }) {
+    // Модальные окна (без смайликов, чистый текст)
+    function showModal({ title = 'Информация', message, buttons = [{ text: 'ОК', type: 'primary', value: true }] }) {
         return new Promise((resolve) => {
             const overlay = document.getElementById('modal-overlay');
-            const iconEl = document.getElementById('modal-icon');
-            const msgEl = document.getElementById('modal-message');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
             const btnsEl = document.getElementById('modal-buttons');
-            
-            iconEl.textContent = icon;
-            msgEl.textContent = message;
             btnsEl.innerHTML = '';
             
             buttons.forEach(btn => {
                 const button = document.createElement('button');
                 button.className = `btn btn-${btn.type || 'primary'}`;
                 button.textContent = btn.text;
-                button.onclick = () => {
-                    overlay.classList.add('hidden');
-                    resolve(btn.value);
-                };
+                button.onclick = () => { overlay.classList.add('hidden'); resolve(btn.value); };
                 btnsEl.appendChild(button);
             });
-            
             overlay.classList.remove('hidden');
         });
     }
 
-    // Удобные обёртки
-    function showAlert(message, icon = 'ℹ️') {
-        return showModal({ message, icon, buttons: [{ text: 'ОК', type: 'primary', value: true }] });
+    function showAlert(message) {
+        return showModal({ title: 'Ошибка', message, buttons: [{ text: 'Понятно', type: 'primary', value: true }] });
     }
 
-    function showConfirm(message, icon = '⚠️') {
+    function showConfirm(message) {
         return showModal({
-            message, 
-            icon,
+            title: 'Подтверждение действия', 
+            message,
             buttons: [
                 { text: 'Отмена', type: 'secondary', value: false },
                 { text: 'Подтвердить', type: 'danger', value: true }
@@ -510,7 +481,6 @@
         });
     }
 
-    // === API CALLS ===
     async function apiCall(method, action, { params = {}, body = null } = {}) {
         const url = new URL(API_URL);
         url.searchParams.set('action', action);
@@ -519,12 +489,7 @@
         const headers = { 'Content-Type': 'application/json' };
         if (authToken) headers['X-Auth-Token'] = authToken;
 
-        const res = await fetch(url.toString(), {
-            method,
-            headers,
-            body: body ? JSON.stringify(body) : undefined
-        });
-
+        const res = await fetch(url.toString(), { method, headers, body: body ? JSON.stringify(body) : undefined });
         const data = await res.json().catch(() => ({}));
         
         if (res.status === 401) {
@@ -532,13 +497,10 @@
             logout();
             throw new Error('Unauthorized');
         }
-        if (!res.ok) {
-            throw new Error(data.error || `Ошибка ${res.status}`);
-        }
+        if (!res.ok) throw new Error(data.error || `Ошибка ${res.status}`);
         return data;
     }
 
-    // === ДЕЙСТВИЯ: ЗАПИСИ ===
     async function loadBookings() {
         try {
             const data = await apiCall('GET', 'bookings');
@@ -546,48 +508,33 @@
             container.innerHTML = '';
             
             if (!data || data.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 40px;">Записей пока нет</p>';
+                container.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 40px; background: var(--bg); border-radius: 12px;">Записей пока нет</p>';
                 return;
             }
             
-            // Группируем записи по слотам (date + time)
             const slotsMap = {};
             data.forEach(b => {
                 const key = `${b.date}|${b.time}`;
-                if (!slotsMap[key]) {
-                    slotsMap[key] = {
-                        date: b.date,
-                        time: b.time,
-                        display: b.display,
-                        bookings: []
-                    };
-                }
+                if (!slotsMap[key]) slotsMap[key] = { date: b.date, time: b.time, display: b.display, bookings: [] };
                 slotsMap[key].bookings.push(b);
             });
             
-            // Сортируем слоты по дате и времени
-            const slotsArray = Object.values(slotsMap).sort((a, b) => {
-                const dateA = new Date(`${a.date}T${a.time}`);
-                const dateB = new Date(`${b.date}T${b.time}`);
-                return dateA - dateB;
-            });
+            const slotsArray = Object.values(slotsMap).sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
             
-            // Рендерим каждый слот как аккордеон
             slotsArray.forEach(slot => {
                 const slotDiv = document.createElement('div');
                 slotDiv.className = 'slot-group';
                 
-                const isFull = slot.bookings.length >= 7; // Предполагаем max=7, но лучше получать из schedule
+                // Получаем max из первой записи или дефолт 7
+                const maxSpots = 7; 
+                const isFull = slot.bookings.length >= maxSpots;
                 const badgeClass = isFull ? 'full' : 'free';
-                const badgeText = `${slot.bookings.length} записей`;
+                const badgeText = `${slot.bookings.length} из ${maxSpots}`;
                 
-                // Форматируем дату для отображения
                 const dateObj = new Date(slot.date + 'T00:00:00');
-                const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня", 
-                                    "июля", "августа", "сентября", "октября", "ноября", "декабря"];
-                const dayName = getDayOfWeek(slot.date);
-                const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} (${dayName})`;
-                
+                const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+                const days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+                const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} (${days[dateObj.getDay()]})`;
                 const slotName = (slot.display && slot.display !== "Отработка") ? slot.display : "Отработка";
                 
                 slotDiv.innerHTML = `
@@ -596,111 +543,67 @@
                             <div class="slot-title">${slotName}</div>
                             <div class="slot-meta">${formattedDate}, ${slot.time}</div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
                             <span class="slot-badge ${badgeClass}">${badgeText}</span>
                             <span class="expand-icon">▶</span>
                         </div>
                     </div>
                     <div class="slot-content">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th>Ребёнок</th>
-                                    <th>Родитель</th>
-                                    <th>Телефон</th>
-                                    <th>Время записи</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Ребёнок</th><th>Родитель</th><th>Телефон</th><th>Время записи</th><th style="width:100px;">Действия</th></tr></thead>
                             <tbody>
                                 ${slot.bookings.map(b => {
-                                    const createdAt = new Date(b.createdAt + '+03:00').toLocaleString('ru-RU', { 
-                                        timeZone: 'Europe/Moscow',
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit'
-                                    });
-                                    return `
-                                        <tr>
-                                            <td>${b.childName}</td>
-                                            <td>${b.parentName}</td>
-                                            <td>
-                                                <a href="https://web.max.ru/" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 500;">
-                                                    ${b.phone} ↗
-                                                </a>
-                                            </td>
-                                            <td style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
-                                            <td>
-                                                <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Отменить</button>
-                                            </td>
-                                        </tr>
-                                    `;
+                                    const createdAt = new Date(b.createdAt + '+03:00').toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                                    return `<tr>
+                                        <td style="font-weight:600;">${b.childName}</td>
+                                        <td>${b.parentName}</td>
+                                        <td><a href="https://web.max.ru/" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">${b.phone} ↗</a></td>
+                                        <td style="color: var(--text-muted); font-size: 0.85rem;">${createdAt}</td>
+                                        <td><button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Отменить</button></td>
+                                    </tr>`;
                                 }).join('')}
                             </tbody>
                         </table>
                     </div>
                 `;
-                
                 container.appendChild(slotDiv);
             });
-            
-        } catch (e) { 
-            if(e.message !== 'Unauthorized') showToast(e.message, 'error'); 
-        }
+        } catch (e) { if(e.message !== 'Unauthorized') showToast(e.message, 'error'); }
     }
 
     function toggleSlot(headerElement) {
         const content = headerElement.nextElementSibling;
         const icon = headerElement.querySelector('.expand-icon');
-        
         headerElement.classList.toggle('expanded');
         content.classList.toggle('expanded');
         icon.classList.toggle('rotated');
     }
 
-    function getDayOfWeek(dateStr) {
-        const days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
-        const date = new Date(dateStr + 'T00:00:00');
-        return days[date.getDay()];
-    }
-
     async function deleteBooking(bookingId) {
-        const confirmed = await showConfirm('Вы уверены, что хотите отменить эту запись ребёнка?', '🗑️');
+        const confirmed = await showConfirm('Вы уверены, что хотите отменить эту запись ребёнка? Это действие нельзя отменить.');
         if (!confirmed) return;
         try {
             await apiCall('DELETE', 'deleteBooking', { params: { id: bookingId } });
-            showToast('Запись отменена', 'success');
+            showToast('Запись успешно отменена', 'success');
             loadBookings();
-        } catch (e) { 
-            await showAlert(e.message, '❌'); 
-        }
+        } catch (e) { await showAlert(e.message); }
     }
 
     function toggleRecurringMode() {
         const isRecurring = document.getElementById('toggle-recurring').checked;
-        const singleForm = document.getElementById('single-slot-form');
-        const recurringForm = document.getElementById('recurring-slot-form');
+        document.getElementById('single-slot-form').style.display = isRecurring ? 'none' : 'flex';
+        const recForm = document.getElementById('recurring-slot-form');
         const dayCheckboxes = document.querySelectorAll('.day-checkbox');
 
         if (isRecurring) {
-            singleForm.style.display = 'none';
-            recurringForm.classList.add('active');
+            recForm.classList.add('active');
             dayCheckboxes.forEach(cb => cb.disabled = false);
-            
-            // Устанавливаем дату начала на сегодня по умолчанию
             if (!document.getElementById('recur-start-date').value) {
                 document.getElementById('recur-start-date').value = new Date().toISOString().split('T')[0];
             }
         } else {
-            singleForm.style.display = 'flex';
-            recurringForm.classList.remove('active');
-            dayCheckboxes.forEach(cb => {
-                cb.disabled = true;
-                cb.checked = false;
-            });
+            recForm.classList.remove('active');
+            dayCheckboxes.forEach(cb => { cb.disabled = true; cb.checked = false; });
         }
     }
 
@@ -711,45 +614,25 @@
         const display = document.getElementById('recur-display').value.trim();
         const max = parseInt(document.getElementById('recur-max').value);
         
-        // Собираем выбранные дни недели (массив чисел)
         const selectedDays = [];
-        document.querySelectorAll('.day-checkbox:checked').forEach(cb => {
-            selectedDays.push(parseInt(cb.value));
-        });
+        document.querySelectorAll('.day-checkbox:checked').forEach(cb => selectedDays.push(parseInt(cb.value)));
 
         if (!startDate || selectedDays.length === 0 || !time || !weeks || !max) {
-            return showToast('Заполните дату начала, выберите хотя бы один день недели, время и места', 'error');
+            return showToast('Заполните дату начала, выберите дни недели, время и места', 'error');
         }
 
         try {
-            const res = await apiCall('POST', 'addBulkSlots', { 
-                body: { 
-                    start_date: startDate, 
-                    days_of_week: selectedDays, 
-                    time: time, 
-                    display: display, 
-                    max: max, 
-                    weeks_count: weeks 
-                } 
-            });
-            
+            const res = await apiCall('POST', 'addBulkSlots', { body: { start_date: startDate, days_of_week: selectedDays, time, display, max, weeks_count: weeks } });
             showToast(res.message || 'Расписание успешно создано', 'success');
-            
-            // Сброс формы
             document.querySelectorAll('.day-checkbox:checked').forEach(cb => cb.checked = false);
             document.getElementById('recur-time').value = '';
             document.getElementById('recur-display').value = '';
-            
             loadSchedule();
-        } catch (e) { 
-            showToast(e.message, 'error'); 
-        }
+        } catch (e) { showToast(e.message, 'error'); }
     }
     
-    // === ДЕЙСТВИЯ: РАСПИСАНИЕ ===
     async function loadSchedule() {
         try {
-            // Используем админский эндпоинт, который возвращает ВСЕ слоты
             const data = await apiCall('GET', 'adminSchedule');
             const tbody = document.getElementById('schedule-tbody');
             tbody.innerHTML = '';
@@ -757,80 +640,53 @@
             data.forEach(s => {
                 const isFull = s.booked >= s.max;
                 const displayText = (s.display && s.display !== "Отработка") ? s.display : '<span style="color:var(--text-muted)">Отработка</span>';
-                const timeText = s.time ? s.time : '—';
                 
                 tbody.innerHTML += `<tr>
-                    <td>${s.date}</td>
-                    <td>${timeText}</td>
+                    <td style="font-weight:600;">${s.date}</td>
+                    <td>${s.time || '—'}</td>
                     <td>${displayText}</td>
-                    <td style="color: ${isFull ? 'var(--error)' : 'var(--success)'}; font-weight: 600;">
-                        ${s.booked} / ${s.max}
-                    </td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}', ${s.booked})">Удалить</button>
-                    </td>
+                    <td><span class="slot-badge ${isFull ? 'full' : 'free'}">${s.booked} / ${s.max}</span></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteSlot('${s.date}', '${s.time}', ${s.booked})">Удалить</button></td>
                 </tr>`;
             });
         } catch (e) { showToast('Ошибка загрузки расписания', 'error'); }
     }
 
     async function addSlot() {
-        const dateEl = document.getElementById('new-slot-date');
-        const timeEl = document.getElementById('new-slot-time');
-        const displayEl = document.getElementById('new-slot-display');
-        const maxEl = document.getElementById('new-slot-max');
-
-        // Защита от того, что элементы не найдены
-        if (!dateEl || !timeEl || !maxEl) {
-            console.error('Не найдены элементы формы расписания');
-            return showToast('Ошибка интерфейса. Обновите страницу.', 'error');
-        }
-
-        const date = dateEl.value;
-        const time = timeEl.value;
-        const display = displayEl ? displayEl.value.trim() : '';
-        const max = parseInt(maxEl.value);
+        const date = document.getElementById('new-slot-date').value;
+        const time = document.getElementById('new-slot-time').value;
+        const display = document.getElementById('new-slot-display').value.trim();
+        const max = parseInt(document.getElementById('new-slot-max').value);
         
         if (!date || !time || !max) return showToast('Заполните дату, время и места', 'error');
-        
-        // Базовая проверка на прошедшую дату на фронтенде
-        const today = new Date().toISOString().split('T')[0];
-        if (date < today) return showToast('Дата не может быть в прошлом', 'error');
+        if (date < new Date().toISOString().split('T')[0]) return showToast('Дата не может быть в прошлом', 'error');
 
         try {
             await apiCall('POST', 'addSlot', { body: { date, time, display, max } });
-            showToast('Слот добавлен', 'success');
-            // Очистка полей
-            dateEl.value = '';
-            timeEl.value = '';
-            if (displayEl) displayEl.value = '';
+            showToast('Слот успешно добавлен', 'success');
+            document.getElementById('new-slot-date').value = '';
+            document.getElementById('new-slot-time').value = '';
+            document.getElementById('new-slot-display').value = '';
             loadSchedule();
-        } catch (e) { 
-            // Если бэкенд отклонил из-за правила 10 часов или другой причины, покажем его ошибку
-            showToast(e.message, 'error'); 
-        }
+        } catch (e) { showToast(e.message, 'error'); }
     }
+
     async function deleteSlot(date, time, bookedCount) {
         let msg = `Удалить слот на ${date} в ${time}?`;
-        let icon = '🗑️';
         if (bookedCount > 0) {
-            msg = `ВНИМАНИЕ!\n\nНа этот слот уже записано детей: ${bookedCount}.\n\nВы уверены? Не забыли уведомить родителей об отмене?`;
-            icon = '🚨';
+            msg = `ВНИМАНИЕ!\n\nНа этот слот уже записано детей: ${bookedCount}.\n\nПри удалении все эти записи будут аннулированы.\n\nВы уверены, что уведомили родителей?`;
         }
         
-        const confirmed = await showConfirm(msg, icon);
+        const confirmed = await showConfirm(msg);
         if (!confirmed) return;
         
         try {
             await apiCall('DELETE', 'deleteSlot', { params: { date, time } });
             showToast('Слот удалён', 'success');
             loadSchedule();
-        } catch (e) { 
-            await showAlert(e.message, '❌'); 
-        }
+        } catch (e) { await showAlert(e.message); }
     }
 
-    // === ДЕЙСТВИЯ: АДМИНЫ (Master only) ===
     async function loadAdmins() {
         try {
             const data = await apiCall('GET', 'admins');
@@ -838,7 +694,7 @@
             tbody.innerHTML = '';
             data.forEach(a => {
                 tbody.innerHTML += `<tr>
-                    <td>${a.login}</td>
+                    <td style="font-weight:600;">${a.login}</td>
                     <td><button class="btn btn-danger btn-sm" onclick="deleteAdmin('${a.login}')">Удалить</button></td>
                 </tr>`;
             });
@@ -846,13 +702,13 @@
     }
 
     async function createAdmin() {
-        const login = document.getElementById('new-admin-login').value;
+        const login = document.getElementById('new-admin-login').value.trim();
         const password = document.getElementById('new-admin-pass').value;
         if (!login || password.length < 4) return showToast('Логин и пароль (мин. 4 символа) обязательны', 'error');
         
         try {
             await apiCall('POST', 'createAdmin', { body: { login, password } });
-            showToast('Админ создан', 'success');
+            showToast('Администратор успешно создан', 'success');
             document.getElementById('new-admin-login').value = '';
             document.getElementById('new-admin-pass').value = '';
             loadAdmins();
@@ -860,23 +716,20 @@
     }
 
     async function deleteAdmin(login) {
-        const confirmed = await showConfirm(`Удалить админа ${login}?`, '🗑️');
+        const confirmed = await showConfirm(`Удалить администратора "${login}"?`);
         if (!confirmed) return;
         try {
             await apiCall('DELETE', 'deleteAdmin', { params: { login } });
-            showToast('Админ удалён', 'success');
+            showToast('Администратор удалён', 'success');
             loadAdmins();
-        } catch (e) { 
-            await showAlert(e.message, '❌'); 
-        }
+        } catch (e) { await showAlert(e.message); }
     }   
 
-    // === УТИЛИТЫ ===
     function showToast(msg, type = 'success') {
         const t = document.getElementById('toast');
         t.textContent = msg;
         t.className = `toast show ${type}`;
-        setTimeout(() => t.classList.remove('show'), 3000);
+        setTimeout(() => t.classList.remove('show'), 3500);
     }
 </script>
 </body>
